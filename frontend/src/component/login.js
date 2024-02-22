@@ -14,7 +14,7 @@ export default function Login() {
 
     // If signup token exists, navigate to index page
     if (signUpToken) {
-      navigate("/index");
+      navigate("/event");
     }
   }, [navigate]);
 
@@ -109,7 +109,7 @@ export default function Login() {
         sessionStorage.setItem("userToken", data.token);
 
         // Redirect to the index page
-        navigate("/index");
+        navigate("/event");
       } else {
         // Set login error state
         setErrors({ login: "Email or password is incorrect" });

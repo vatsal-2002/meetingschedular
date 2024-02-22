@@ -36,38 +36,6 @@ const createSchedule = (req, res) => {
   }
 };
 
-// Get Schedule By ID
-// const getScheduleById = (req, res) => {
-//   try {
-//     const scheduleId = req.params.id;
-//     const timezone = req.query.timezone;
-//     const selectQuery = `SELECT userId, id, isDefault, timezone, weeklyhours FROM schedules WHERE id = ? AND timezone = ?`;
-
-//     const userId = req.authData.id;
-
-//     db.query(selectQuery, [scheduleId, timezone], (error, results) => {
-//       if (error) {
-//         console.error('Error in getScheduleById:', error);
-//         return res.json({ error });
-//       }
-
-//       if (results.length === 0) {
-//         return res.status(404).json({ error: 'Schedule not found' });
-//       }
-
-//       const schedule = results[0];
-
-//       if (schedule.userId !== userId) {
-//         return res.status(403).json({ error: "Schedule does not belong to the authenticated user." });
-//       }
-
-//       res.status(200).json(schedule);
-//     });
-//   } catch (error) {
-//     console.error('Error in try-catch block:', error);
-//     res.json({ error });
-//   }
-// };
 
 const getScheduleById = (req, res) => {
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Createmeetingsidebar from './createmeetingsidebar';
 
 const Createmeeting = () => {
@@ -6,13 +6,58 @@ const Createmeeting = () => {
   const [selectedDuration, setSelectedDuration] = useState("15");
   const [showCustomDuration, setShowCustomDuration] = useState(false);
   const [location, setLocation] = useState("google_meet");
-  const [customDuration, setCustomDuration] = useState(""); // State to store custom duration
+  const [customDuration, setCustomDuration] = useState("");
+  const [userFullName, setUserFullName] = useState('');
+
+  useEffect(() => {
+    // Decode user token to get user ID
+    const userToken = sessionStorage.getItem("userToken");
+    const decodedToken = decodeToken(userToken);
+    const userId = decodedToken.id;
+    // Fetch user details using user ID
+    const fetchUserDetails = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/users/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `${userToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user details");
+        }
+
+        const userData = await response.json();
+        setUserFullName(`${userData.firstname} ${userData.lastname}`);
+      } catch (error) {
+        console.error("Error fetching user details:", error.message);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  // Function to decode JWT token
+  const decodeToken = (token) => {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  };
 
   const handleDurationChange = (event) => {
     const duration = event.target.value;
     setSelectedDuration(duration);
     setShowCustomDuration(duration === 'Custom');
   };
+
+
 
   return (
     <>
@@ -40,7 +85,7 @@ const Createmeeting = () => {
                   This is a preview. To book an event, share the link with your invitees.
                 </p>
                 <div className="col-6 d-flex flex-column p-4">
-                  <label>MEET PATEL</label>
+                  <label>{userFullName ? userFullName : "Event name here"}</label>
                   <h3>{meetingName}</h3>
                   <label><span className="mdi mdi-clock-time-five-outline"></span>{selectedDuration} min</label>
                   <label><span className="mdi mdi-map-marker"></span>{location}</label>

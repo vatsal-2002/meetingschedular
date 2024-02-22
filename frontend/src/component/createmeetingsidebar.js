@@ -73,7 +73,7 @@ const Createmeetingsidebar = ({
   };
 
   const handleCancel = () => {
-    navigate('/index');
+    navigate('/event');
   };
 
   const handleCustomDurationChange = (event) => {

@@ -9,7 +9,7 @@ import Signup from './component/signup';
 import Setting from './component/setting';
 import Availability from './component/availability';
 import Demo from './component/demo';
-import Index from './component/index';
+import Index from './component/event';
 import Createmeeting from './component/createmeeting';
 import Meetingsetting from './component/meetingsetting';
 import Schedulesetting from './component/schedulesetting';
@@ -28,7 +28,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/setting" element={<Setting />} />
             <Route path="/availability" element={<Availability />} />
-            <Route path="/index" element={<Index />} />
+            <Route path="/event" element={<Index />} />
             <Route path="/createmeeting" element={<Createmeeting />} />
             <Route path="/meetingsetting" element={<Meetingsetting />} />
             <Route path="/editmeeting" element={<EditMeeting />} />

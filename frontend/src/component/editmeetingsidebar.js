@@ -67,7 +67,7 @@ const EditMeetingsidebar = ({ initialMeetingName, initialSelectedDuration, initi
         } else {
             setShowCustomDuration(false);
             setLocalSelectedDuration(duration);
-            setSelectedDuration(duration); // Update the duration in the main component
+            setSelectedDuration(duration);
         }
     };
 

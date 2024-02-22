@@ -27,7 +27,7 @@ const Sidebar = ({ isToggled, handleToggle }) => {
               </Link>
             </div>
             <li className="sidebar">
-              <Link to="/index">
+              <Link to="/event">
                 <i className="mdi mdi-link-variant" />
                 Event
               </Link>
