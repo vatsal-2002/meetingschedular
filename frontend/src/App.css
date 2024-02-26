@@ -2572,3 +2572,129 @@ button.meeting-cancel {
   color: #2f55d4;
   cursor: pointer;
 }
+
+.btn_card {
+  position: absolute;
+  right: 1%;
+  background: none;
+  color: black;
+  border: none;
+}
+
+.btn_card:hover {
+  background: none !important;
+  color: black;
+}
+
+.create_meeting_btn {
+  font-family: var(--bs-font-sans-serif);
+  font-weight: 600;
+  background-color: #0137fcd1;
+  color: #fff;
+  line-height: 45px;
+  border-radius: 35px;
+  width: 85%;
+  border: none;
+  margin-left: 8%;
+}
+
+.create_meeting_btn:hover {
+  background-color: #0137fc;
+}
+
+.btn-none {
+  background: none;
+  border: none;
+}
+
+.slot-checkbox {
+  width: 20px;
+  height: 20px;
+}
+
+/* .drop-down-w-45{
+  width: 40%;
+} */
+
+.sidebar-block nav {
+  width: 25% !important;
+}
+
+button.meeting-cancel {
+  background-color: transparent;
+  border: none;
+  text-decoration: underline;
+}
+
+.meeting-detail select {
+  height: 40px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  color: #8d8d8d;
+  outline: none;
+}
+
+.create-preview {
+  width: 70%;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 61%;
+}
+
+.create-preview p {
+  background-color: #333;
+  color: #fff;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 1.2%;
+  font-weight: 700;
+  margin: 0;
+}
+
+.h-550 {
+  height: 550px;
+}
+
+.preview-right {
+  border-left: 2px solid #e7e7e7;
+}
+
+.schedulesetting-content,
+.weekly-hour {
+  font-size: 14px;
+}
+
+.weekly-hour-textbox {
+  width: 30%;
+}
+
+.vh-100 {
+  height: 100vh;
+}
+
+.mdi-plus,
+.mdi-close {
+  cursor: pointer;
+}
+
+.overflow-slots {
+  height: 295px;
+  width: 200px;
+  overflow-y: scroll;
+}
+
+button.btn-view-live {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  position: absolute;
+  right: 2%;
+}
+
+.mdi-arrow-top-right-bold-box-outline {
+  font-size: 20px;
+}

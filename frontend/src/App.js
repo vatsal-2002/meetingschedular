@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { Provider } from 'react-redux'; // Importing Provider to wrap the application
-import store from './component/store'; // Importing the Redux store
+import { Provider } from 'react-redux';
+import store from './component/store';
 import Login from './component/login';
 import Signup from './component/signup';
 import Setting from './component/setting';
@@ -12,10 +12,12 @@ import Demo from './component/demo';
 import Index from './component/event';
 import Createmeeting from './component/createmeeting';
 import Meetingsetting from './component/meetingsetting';
-import Schedulesetting from './component/schedulesetting';
 import EditMeeting from './component/editmeeting';
-import Availabilityschedules from './component/availabilityschedules'
+import Schedulesetting from './component/schedulesetting';
 import Viewlivepage from './component/viewlivepage';
+import Meeting from './component/meeting';
+import Availabilityschedules from './component/availabilityschedules';
+
 
 function App() {
   return (
@@ -33,9 +35,11 @@ function App() {
             <Route path="/meetingsetting" element={<Meetingsetting />} />
             <Route path="/editmeeting" element={<EditMeeting />} />
             <Route path="/schedulesetting" element={<Schedulesetting />} />
-            <Route path="/availabilityschedules" element={<Availabilityschedules />} />
             <Route path="/viewlivepage" element={<Viewlivepage />} />
+            <Route path="/meeting" element={<Meeting />} />
+            <Route path="/availabilityschedules" element={<Availabilityschedules />} />
             {/* <Route path="/demo" element={<Demo />} /> */}
+
           </Routes>
         </div>
       </Router>

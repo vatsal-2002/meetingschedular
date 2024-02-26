@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { useLocation } from "react-router-dom";
 
 const Viewlivepage = () => {
+  const location = useLocation();
   const [date, setDate] = useState(new Date());
+  const { meetingDetails, selectedDate, timezoneArray } = location.state;
+
+  useEffect(() => {
+    console.log("Meeting Details:", meetingDetails);
+    console.log("Selected Date:", selectedDate);
+    console.log("Timezone Array:", timezoneArray);
+  }, [meetingDetails, selectedDate, timezoneArray]);
 
   const onChange = (newDate) => {
     setDate(newDate);
@@ -34,7 +43,7 @@ const Viewlivepage = () => {
               </Navbar.Collapse>
             </Container>
           </Navbar>
-          
+
           <div className="col-12 d-flex align-items-center bg-soft-secondary vh-100">
             <div className="container create-preview">
               <div className="row d-flex">
