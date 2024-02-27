@@ -1,296 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import Calendar from "react-calendar";
-// import "react-calendar/dist/Calendar.css";
-// import { useDispatch } from 'react-redux';
-// import Container from "react-bootstrap/Container";
-// import Nav from "react-bootstrap/Nav";
-// import Navbar from "react-bootstrap/Navbar";
-// import NavDropdown from "react-bootstrap/NavDropdown";
-// import { useLocation, useNavigate } from "react-router-dom";
-
-// const Viewlivepage = () => {
-//   const location = useLocation();
-//   const navigate = useNavigate(); // Access the history object
-//   const [date, setDate] = useState(new Date());
-//   const [userFullName, setUserFullName] = useState('');
-//   const dispatch = useDispatch();
-//   const meetingId = new URLSearchParams(location.search).get('id');
-//   const { meetingDetails, selectedDate, timezoneArray, selectedSchedule, weeklyhoursArray } = location.state || {};
-
-//   const decodeToken = (token) => {
-//     const base64Url = token.split('.')[1];
-//     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-//     const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-//       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-//     }).join(''));
-
-//     return JSON.parse(jsonPayload);
-//   };
-
-
-//   useEffect(() => {
-//     const userToken = sessionStorage.getItem("userToken");
-//     const decodedToken = decodeToken(userToken);
-//     const userId = decodedToken.id;
-//     const fetchUserDetails = async () => {
-//       try {
-//         const response = await fetch(
-//           `http://localhost:8000/users/${userId}`,
-//           {
-//             method: "GET",
-//             headers: {
-//               Authorization: `${userToken}`,
-//             },
-//           }
-//         );
-
-//         if (!response.ok) {
-//           throw new Error("Failed to fetch user details");
-//         }
-
-//         const userData = await response.json();
-//         setUserFullName(`${userData.firstname} ${userData.lastname}`);
-//       } catch (error) {
-//         console.error("Error fetching user details:", error.message);
-//       }
-//     };
-
-//     fetchUserDetails();
-//   }, [dispatch]);
-
-//   // useEffect(() => {
-//   //   const state = location.state;
-//   //   if (state) {
-//   //     const { meetingDetails, selectedDate, timezoneArray, selectedSchedule, weeklyhoursArray } = state;
-//   //     console.log("Meeting Details:", meetingDetails);
-//   //     console.log("Selected Date:", selectedDate);
-//   //     console.log("Timezone Array:", timezoneArray);
-//   //     console.log("Selected Schedule:", selectedSchedule);
-//   //     console.log("Weeklyhours Array:", weeklyhoursArray);
-//   //   }
-//   // }, [location.state]);
-
-//   const onChange = (newDate) => {
-//     setDate(newDate);
-//   };
-
-//   const handleEventPageNavigation = () => {
-//     // Navigate to the event page
-//     navigate('/event');
-//   };
-
-//   const handleMeetingSettingsNavigation = () => {
-//     // Navigate to the meeting settings page
-//     navigate(`/meetingsetting?id=${meetingId}`);
-//   };
-
-//   return (
-//     <>
-//       <div className="container-fuild">
-//         <row>
-//           <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
-//             <Container>
-//               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-//               <Navbar.Collapse id="responsive-navbar-nav">
-//                 <Nav className="me-auto"></Nav>
-//                 <Nav>
-//                   <NavDropdown title="Menu" id="collapsible-nav-dropdown">
-//                     <NavDropdown.Item onClick={handleEventPageNavigation}>Home</NavDropdown.Item>
-//                     <NavDropdown.Item onClick={handleMeetingSettingsNavigation}>Edit event type</NavDropdown.Item>
-//                   </NavDropdown>
-//                   <a href="#" className="btn btn-outline-primary"> Copy link </a>
-//                 </Nav>
-//               </Navbar.Collapse>
-//             </Container>
-//           </Navbar>
-
-//           <div className="col-12 d-flex align-items-center bg-soft-secondary vh-100">
-//             <div className="container create-preview">
-//               <div className="row d-flex">
-//                 <div className="col-6 d-flex flex-column p-4">
-//                   <label>
-//                     {userFullName ? userFullName : "UserName name here"}
-//                   </label>
-//                   <label>{meetingDetails?.organizer}</label>
-//                   <h3>{meetingDetails?.name || "Event name here"}</h3>
-//                   <label>
-//                     <span className="mdi mdi-clock-time-five-outline"></span>
-//                     {meetingDetails?.duration ? `${meetingDetails.duration} min` : "30 min"}
-//                   </label>
-//                   <label>
-//                     <span className="mdi mdi-map-marker"></span>
-//                     {meetingDetails?.location || "Add a location for it to show here"}
-//                   </label>
-//                 </div>
-
-//                 <div className="col-6 d-flex align-items-center justify-content-center h-550 preview-right">
-//                   <div>
-//                     <h4>Select Date & Times</h4>
-//                     <Calendar
-//                       className="border-0"
-//                       onChange={onChange}
-//                       value={date}
-//                     />
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </row>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Viewlivepage;
-
-
-// import React, { useState, useEffect } from "react";
-// import Calendar from "react-calendar";
-// import "react-calendar/dist/Calendar.css";
-// import { useDispatch } from 'react-redux';
-// import Container from "react-bootstrap/Container";
-// import Nav from "react-bootstrap/Nav";
-// import Navbar from "react-bootstrap/Navbar";
-// import NavDropdown from "react-bootstrap/NavDropdown";
-// import { useLocation, useNavigate } from "react-router-dom";
-
-// const Viewlivepage = () => {
-//   const location = useLocation();
-//   const navigate = useNavigate(); // Access the history object
-//   const [date, setDate] = useState(new Date());
-//   const [userFullName, setUserFullName] = useState('');
-//   const dispatch = useDispatch();
-//   const meetingId = new URLSearchParams(location.search).get('id');
-//   const { meetingDetails, selectedDate, timezoneArray, selectedSchedule, weeklyhoursArray } = location.state || {};
-
-//   const decodeToken = (token) => {
-//     const base64Url = token.split('.')[1];
-//     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-//     const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-//       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-//     }).join(''));
-
-//     return JSON.parse(jsonPayload);
-//   };
-
-
-//   useEffect(() => {
-//     const userToken = sessionStorage.getItem("userToken");
-//     const decodedToken = decodeToken(userToken);
-//     const userId = decodedToken.id;
-//     const fetchUserDetails = async () => {
-//       try {
-//         const response = await fetch(
-//           `http://localhost:8000/users/${userId}`,
-//           {
-//             method: "GET",
-//             headers: {
-//               Authorization: `${userToken}`,
-//             },
-//           }
-//         );
-
-//         if (!response.ok) {
-//           throw new Error("Failed to fetch user details");
-//         }
-
-//         const userData = await response.json();
-//         setUserFullName(`${userData.firstname} ${userData.lastname}`);
-//       } catch (error) {
-//         console.error("Error fetching user details:", error.message);
-//       }
-//     };
-
-//     fetchUserDetails();
-//   }, [dispatch]);
-
-//   const onChange = (newDate) => {
-//     setDate(newDate);
-//   };
-
-//   const tileContent = ({ date, view }) => {
-//     const day = date.getDay();
-//     const hasData =
-//       weeklyhoursArray &&
-//       weeklyhoursArray.some(
-//         (d) => d.day === day && d.slots && d.slots.length > 0
-//       );
-
-//     return hasData && view === 'month' ? <div className="blue-dot"></div> : null;
-//   };
-
-//   const handleEventPageNavigation = () => {
-//     // Navigate to the event page
-//     navigate('/event');
-//   };
-
-//   const handleMeetingSettingsNavigation = () => {
-//     // Navigate to the meeting settings page
-//     navigate(`/meetingsetting?id=${meetingId}`);
-//   };
-
-//   return (
-//     <>
-//       <div className="container-fuild">
-//         <row>
-//           <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
-//             <Container>
-//               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-//               <Navbar.Collapse id="responsive-navbar-nav">
-//                 <Nav className="me-auto"></Nav>
-//                 <Nav>
-//                   <NavDropdown title="Menu" id="collapsible-nav-dropdown">
-//                     <NavDropdown.Item onClick={handleEventPageNavigation}>Home</NavDropdown.Item>
-//                     <NavDropdown.Item onClick={handleMeetingSettingsNavigation}>Edit event type</NavDropdown.Item>
-//                   </NavDropdown>
-//                   <a href="#" className="btn btn-outline-primary"> Copy link </a>
-//                 </Nav>
-//               </Navbar.Collapse>
-//             </Container>
-//           </Navbar>
-
-//           <div className="col-12 d-flex align-items-center bg-soft-secondary vh-100">
-//             <div className="container create-preview">
-//               <div className="row d-flex">
-//                 <div className="col-6 d-flex flex-column p-4">
-//                   <label>
-//                     {userFullName ? userFullName : "UserName name here"}
-//                   </label>
-//                   <h3>{meetingDetails?.name || "Event name here"}</h3>
-//                   <label>
-//                     <span className="mdi mdi-clock-time-five-outline"></span>
-//                     {meetingDetails?.duration ? `${meetingDetails.duration} min` : "30 min"}
-//                   </label>
-//                   <label>
-//                     <span className="mdi mdi-map-marker"></span>
-//                     {meetingDetails?.location || "Add a location for it to show here"}
-//                   </label>
-//                 </div>
-
-//                 <div className="col-6 d-flex align-items-center justify-content-center h-550 preview-right">
-//                   <div>
-//                     <h4>Select Date & Times</h4>
-//                     <Calendar
-//                       className="border-0"
-//                       onChange={onChange}
-//                       value={date}
-//                       tileContent={tileContent}
-//                     />
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </row>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Viewlivepage;
-
-
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
@@ -309,6 +16,7 @@ const Viewlivepage = () => {
   const [timezoneArray, settimezoneArray] = useState(defaultTimeZone);
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const [meetingDetails, setMeetingDetails] = useState('');
 
   const { weeklyhoursArray } = location.state || {};
@@ -525,15 +233,46 @@ const Viewlivepage = () => {
         });
 
         return (
-          <button className="btn btn-primary mx-3 mb-1" key={key}>
-            {formattedStartTime}
-          </button>
+          <div key={key} className="d-flex align-items-center">
+            <button className="btn btn-primary mx-1 mb-1 w-100" onClick={() => handleStartTimeClick(index)}>
+              {formattedStartTime}
+            </button>
+            {selectedSchedule === index && (
+              <button className="btn btn-secondary mb-1" onClick={() => handleNextButtonClick(slot)}>
+                Next
+              </button>
+            )}
+          </div>
         );
       }
 
       return null;
     });
   };
+
+
+  const handleStartTimeClick = (index) => {
+    // Set the selected schedule index when a formatted start time button is clicked
+    setSelectedSchedule(index);
+  };
+
+
+
+  const handleNextButtonClick = (slot) => {
+    // Format the selected date to match the desired format
+    const formattedDate = selectedDate.toISOString().split('T')[0];
+    const formattedTime = `${slot.start.hour}:${slot.start.minute}`;
+    const timezoneOffset = new Date().getTimezoneOffset() / 60;
+    const timezoneOffsetString = timezoneOffset >= 0 ? `+${timezoneOffset}` : timezoneOffset.toString();
+
+    // Construct the URL with the necessary parameters and meeting details
+    const url = `/meeting?${encodeURIComponent(meetingDetails.name)}/${meetingDetails.duration}/${encodeURIComponent(meetingDetails.location)}${formattedDate}T${formattedTime}${timezoneOffsetString}?month=${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}&date=${formattedDate}`;
+
+    // Navigate to the Meeting page with the constructed URL and meeting details as state
+    navigate(url, { state: meetingDetails });
+  };
+
+
 
 
   const handleDateChange = (date) => {
@@ -546,11 +285,12 @@ const Viewlivepage = () => {
 
     const day = date.getDay();
     const hasData =
-      timezone &&
-      timezone.some(
-        (tz) =>
-          tz.weeklyhours &&
-          tz.weeklyhours.some((d) => d.day === day && d.slots && d.slots.length > 0)
+      weeklyhoursArray &&
+      weeklyhoursArray.some(
+        (dayData) =>
+          dayData.day === day &&
+          dayData.slots &&
+          dayData.slots.length > 0
       );
 
     if (hasData && isAfterToday && view === 'month' && !daysWithData.includes(day)) {
@@ -577,6 +317,15 @@ const Viewlivepage = () => {
     setSelectedDate(date);
 
     return true;
+  };
+
+
+  const handleEventPageNavigation = () => {
+    navigate('/event');
+  };
+
+  const handleMeetingSettingsNavigation = () => {
+    navigate(`/meetingsetting?id=${meetingId}`);
   };
 
   return (
@@ -611,9 +360,8 @@ const Viewlivepage = () => {
                 <Nav className="me-auto"></Nav>
                 <Nav>
                   <NavDropdown title="Menu" id="collapsible-nav-dropdown">
-                    <NavDropdown.Item href="#">Home</NavDropdown.Item>
-                    <NavDropdown.Item href="#">
-                      Edit event type
+                    <NavDropdown.Item onClick={handleEventPageNavigation}>Home</NavDropdown.Item>
+                    <NavDropdown.Item onClick={handleMeetingSettingsNavigation}>Edit event type
                     </NavDropdown.Item>
                   </NavDropdown>
                   <a href="#" className="btn btn-outline-primary"> Copy link </a>
@@ -626,14 +374,6 @@ const Viewlivepage = () => {
 
       <div className="container-fuild">
         <div className="row d-flex">
-          {/* <div className="col-3">
-            <div className="page-wrapper toggled"> */}
-          {/* <Schedulesettingsidebar
-                onScheduleChange={handleScheduleChange}
-              /> */}
-          {/* </div>
-          </div> */}
-
           <div className="col-12 d-flex align-items-center bg-soft-secondary vh-100">
             <div className="container create-preview">
               <div className="row d-flex">
