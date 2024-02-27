@@ -28,8 +28,13 @@ const Schedulesetting = () => {
 
   const [currentTime, setCurrentTime] = useState(getCurrentTime(defaultTimeZone));
 
-  const handleSidebarScheduleChange = (selectedScheduleData) => {
-    dispatch(setScheduleData(selectedScheduleData));
+  // const handleSidebarScheduleChange = (selectedScheduleData) => {
+  //   dispatch(setScheduleData(selectedScheduleData));
+  //   onScheduleChange(selectedScheduleData); // Pass data to parent component
+  // };
+
+  const handleScheduleChange = (selectedScheduleData) => {
+    setSelectedSchedule(selectedScheduleData);
   };
 
   function getCurrentTime(timezone) {
@@ -297,13 +302,9 @@ const Schedulesetting = () => {
 
   const handleViewLivePage = () => {
     const url = `/viewlivepage?id=${meetingId}`;
-    const state = { meetingDetails, selectedDate, timezoneArray }; // Define state object
-    window.open(url, '_blank', 'noopener,noreferrer', state);
+    const state = { meetingDetails, selectedDate, timezoneArray, selectedSchedule, weeklyhoursArray }; // Include selectedSchedule data
+    navigate(url, { state });
   };
-
-
-
-
 
 
   return (
@@ -334,7 +335,7 @@ const Schedulesetting = () => {
           <div className="col-3">
             <div className="page-wrapper toggled">
               <Schedulesettingsidebar
-                onScheduleChange={handleSidebarScheduleChange}
+                onScheduleChange={handleScheduleChange}
               />
             </div>
           </div>
