@@ -13,7 +13,6 @@ const Schedulesetting = () => {
   const defaultTimeZone = "Asia/Kolkata";
   const [timezoneArray, settimezoneArray] = useState(defaultTimeZone);
   const navigate = useNavigate();
-  // const selectedSchedule = useSelector(state => state.meetings.selectedSchedule);
   const dispatch = useDispatch();
   const location = useLocation();
   const [meetingDetails, setMeetingDetails] = useState(null);
@@ -27,11 +26,6 @@ const Schedulesetting = () => {
   const currentMeeting = useSelector(state => state.meetings.currentMeeting);
 
   const [currentTime, setCurrentTime] = useState(getCurrentTime(defaultTimeZone));
-
-  // const handleSidebarScheduleChange = (selectedScheduleData) => {
-  //   dispatch(setScheduleData(selectedScheduleData));
-  //   onScheduleChange(selectedScheduleData); // Pass data to parent component
-  // };
 
   const handleScheduleChange = (selectedScheduleData) => {
     setSelectedSchedule(selectedScheduleData);
@@ -64,18 +58,13 @@ const Schedulesetting = () => {
   };
 
   useEffect(() => {
-
     const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const timezoneFromList = Timezones_List.find(
       (timezone) => timezone.timezone === currentTimezone
     );
 
-    // Set the default timezone to the current timezone or "Asia/Kolkata" if not found
     settimezoneArray(timezoneFromList ? currentTimezone : defaultTimeZone);
-
-    // Set the current time based on the default or current timezone
     setCurrentTime(getCurrentTime(timezoneFromList ? currentTimezone : defaultTimeZone));
-
   }, []);
 
   useEffect(() => {
@@ -233,7 +222,6 @@ const Schedulesetting = () => {
       if (!uniqueKeys.has(key)) {
         uniqueKeys.add(key);
 
-        // Convert slot start time to the selected timezone
         const startTime = new Date(selectedDate);
         startTime.setHours(parseInt(slot.start.hour), parseInt(slot.start.minute), 0);
 
@@ -241,7 +229,7 @@ const Schedulesetting = () => {
           timeZone: timezoneArray,
           hour: 'numeric',
           minute: 'numeric',
-          hour12: false, // Set to false to get 24-hour format
+          hour12: false,
         });
 
         return (
@@ -254,8 +242,6 @@ const Schedulesetting = () => {
       return null;
     });
   };
-
-
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -301,8 +287,18 @@ const Schedulesetting = () => {
   };
 
   const handleViewLivePage = () => {
-    const url = `/viewlivepage?id=${meetingId}`;
-    const state = { meetingDetails, selectedDate, timezoneArray, selectedSchedule, weeklyhoursArray }; // Include selectedSchedule data
+    const selectedMonth = selectedDate.getMonth() + 1;
+    const selectedYear = selectedDate.getFullYear();
+
+    const url = `/viewlivepage?id=${meetingId}&month=${selectedMonth}-${selectedYear}`;
+    const state = {
+      meetingDetails,
+      selectedDate,
+      timezoneArray,
+      selectedSchedule,
+      weeklyhoursArray,
+      // defaultTimezone: defaultTimeZone 
+    };
     navigate(url, { state });
   };
 
@@ -351,7 +347,7 @@ const Schedulesetting = () => {
 
                 <div className="col-5 d-flex flex-column p-4">
                   <label>
-                    {userFullName ? userFullName : "Event name here"}
+                    {userFullName ? userFullName : "UserName name here"}
                   </label>
                   <h3>
                     {meetingDetails ? meetingDetails.name : "Event name here"}
