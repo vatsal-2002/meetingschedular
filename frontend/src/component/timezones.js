@@ -1703,7 +1703,7 @@ export const Timezones_List = [
     {
         name: "Indian Standard Time",
         timeoffset: "(GMT+05:30)",
-        timezone: "Asia/Calcutta",
+        timezone: "Asia/kolkata",
     },
     {
         name: "Chita Time",
