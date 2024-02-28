@@ -255,7 +255,7 @@ const getUserById = (req, res) => {
       return res.status(404).json({ error: "Token does not match user ID" });
     }
 
-    const query = 'SELECT id, firstname, lastname, email FROM users WHERE id = ?';
+    const query = 'SELECT id, firstname, lastname, username, email FROM users WHERE id = ?';
     db.query(query, [userId], (err, results) => {
       if (err) {
         console.log("Server error about query", err);
@@ -271,6 +271,7 @@ const getUserById = (req, res) => {
         id: userData.id,
         firstname: userData.firstname,
         lastname: userData.lastname,
+        username: userData.username,
         email: userData.email,
       };
 

@@ -17,17 +17,17 @@ const Viewlivepage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const [selectedSlot, setSelectedSlot] = useState(null);
   const [meetingDetails, setMeetingDetails] = useState('');
 
   const { weeklyhoursArray } = location.state || {};
 
-  useEffect(() => {
-    console.log("weeklyhoursArray:", weeklyhoursArray);
-  }, [weeklyhoursArray]);
+  // useEffect(() => {
+  //   console.log("weeklyhoursArray:", weeklyhoursArray);
+  // }, [weeklyhoursArray]);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [userFullName, setUserFullName] = useState('');
+  const [userName, setUsername] = useState('');
   const [timeDuration, setTimeDuration] = useState(15);
   const [daysWithData, setDaysWithData] = useState([]);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -58,30 +58,11 @@ const Viewlivepage = () => {
   };
 
   const handleTimeZoneChange = (selectedOption) => {
-    const newTimezone = selectedOption.value;
-    settimezoneArray(newTimezone);
-
-    // Retrieve the selected slot from session storage
-    const storedSlot = JSON.parse(sessionStorage.getItem('selectedSlot'));
-
-    // If a slot is stored, update the selected slot with the new timezone
-    if (storedSlot) {
-      const updatedSlot = {
-        start: {
-          hour: storedSlot.start.hour,
-          minute: storedSlot.start.minute
-        },
-        end: {
-          hour: storedSlot.end.hour,
-          minute: storedSlot.end.minute
-        }
-      };
-      // Update the selected slot state
-      setSelectedSlot(updatedSlot);
-    }
+    settimezoneArray(selectedOption.value);
   };
 
   useEffect(() => {
+
     const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const timezoneFromList = Timezones_List.find(
       (timezone) => timezone.timezone === currentTimezone
@@ -93,26 +74,7 @@ const Viewlivepage = () => {
     // Set the current time based on the default or current timezone
     setCurrentTime(getCurrentTime(timezoneFromList ? currentTimezone : defaultTimeZone));
 
-    // Retrieve the selected slot from session storage
-    const storedSlot = JSON.parse(sessionStorage.getItem('selectedSlot'));
-
-    // If a slot is stored, update the selected slot with the new timezone
-    if (storedSlot) {
-      const updatedSlot = {
-        start: {
-          hour: storedSlot.start.hour,
-          minute: storedSlot.start.minute
-        },
-        end: {
-          hour: storedSlot.end.hour,
-          minute: storedSlot.end.minute
-        }
-      };
-      // Update the selected slot state
-      setSelectedSlot(updatedSlot);
-    }
   }, []);
-
 
   useEffect(() => {
     const fetchMeeting = async () => {
@@ -143,7 +105,6 @@ const Viewlivepage = () => {
       fetchMeeting();
     }
   }, [meetingId, dispatch]);
-
   const decodeToken = (token) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -175,7 +136,9 @@ const Viewlivepage = () => {
         }
 
         const userData = await response.json();
+        console.log(userData.username)
         setUserFullName(`${userData.firstname} ${userData.lastname}`);
+        setUsername(`${userData.username}`)
       } catch (error) {
         console.error("Error fetching user details:", error.message);
       }
@@ -183,6 +146,7 @@ const Viewlivepage = () => {
 
     fetchUserDetails();
   }, [dispatch]);
+
 
 
   const [timezone, setTimezone] = useState([
@@ -296,49 +260,7 @@ const Viewlivepage = () => {
     setSelectedSchedule(index);
   };
 
-
-
   const handleNextButtonClick = (slot) => {
-
-    // Format the selected date to match the desired format
-    const formattedDate = selectedDate.toISOString().split('T')[0];
-
-    // Convert the slot time to the selected timezone
-    const startTime = new Date(selectedDate);
-    startTime.setHours(parseInt(slot.start.hour), parseInt(slot.start.minute), 0);
-    const endTime = new Date(selectedDate);
-    endTime.setHours(parseInt(slot.end.hour), parseInt(slot.end.minute), 0);
-
-    const duration = meetingDetails?.duration || 30;
-    const formattedStartTime = startTime.toLocaleTimeString('en-US', {
-      timeZone: timezoneArray,
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: false,
-    });
-
-    const formattedEndTime = endTime.toLocaleTimeString('en-US', {
-      timeZone: timezoneArray,
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: false,
-    });
-
-    // Construct the slot object with updated time
-    const updatedSlot = {
-      start: {
-        hour: formattedStartTime.split(':')[0],
-        minute: formattedStartTime.split(':')[1],
-      },
-      end: {
-        hour: formattedEndTime.split(':')[0],
-        minute: formattedEndTime.split(':')[1],
-      },
-    };
-
-    // Log the selected slot and timezone for verification
-    console.log("Selected Slot:", updatedSlot);
-    console.log("Selected Timezone:", timezoneArray);
 
     settimezoneArray((prevTimezone) => {
       // Find the offset corresponding to the selected timezone
@@ -346,18 +268,51 @@ const Viewlivepage = () => {
         (timezone) => timezone.timezone === prevTimezone
       );
 
+      // Use the offset from the found timezone or set a default offset
       const timezoneOffset = selectedTimezoneObject
         ? selectedTimezoneObject.timeoffset
         : "(GMT+00:00)";
 
+      // Extract the offset in the format "+05:30" from the timeoffset string
       const offsetParts = timezoneOffset.match(/\((GMT[+-]\d{2}:\d{2})\)/);
       const formattedTimezoneOffset = offsetParts ? offsetParts[1] : "+00:00";
 
-      // Construct the URL with the necessary parameters and meeting details
-      const url = `/meeting?id=${meetingId}${encodeURIComponent(meetingDetails.name)}/${meetingDetails.duration}/${encodeURIComponent(meetingDetails.location)}/${formattedDate}T${formattedStartTime}${formattedTimezoneOffset}??month=${formattedDate.slice(0, 7)}`;
+      // Format the selected date to match the desired format
+      const formattedDate = selectedDate.toISOString().split('T')[0];
+      // const timezoneOffset = new Date().getTimezoneOffset() / 60;
+      const timezoneOffsetString = timezoneOffset >= 0 ? `+${timezoneOffset}` : timezoneOffset.toString();
+
+      // Adjust the start time to the selected time slot's start time
+      const adjustedStartTime = new Date(selectedDate);
+      adjustedStartTime.setHours(parseInt(slot.start.hour), parseInt(slot.start.minute), 0);
+
+      // Adjust the end time based on the meeting details or default duration
+      const duration = meetingDetails?.duration || 30;
+      const adjustedEndTime = new Date(adjustedStartTime);
+      adjustedEndTime.setMinutes(adjustedEndTime.getMinutes() + duration);
+
+      const formattedStartTime = adjustedStartTime.toLocaleTimeString('en-US', {
+        timeZone: timezoneArray,
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+      });
+
+      const formattedEndTime = adjustedEndTime.toLocaleTimeString('en-US', {
+        timeZone: timezoneArray,
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+      });
+      const adjustedDate = new Date(selectedDate);
+      adjustedDate.setHours(adjustedStartTime.getHours(), adjustedStartTime.getMinutes(), 0);
+
+      const adjustedMonth = adjustedDate.getMonth() + 1;
+
+      const url = `/meeting?${encodeURIComponent(userName)}/${encodeURIComponent(meetingDetails.name)}/${meetingDetails.duration}/${encodeURIComponent(meetingDetails.location)}&time=${formattedStartTime}&${formattedTimezoneOffset}?&date=${adjustedDate.getFullYear()}-${(adjustedMonth).toString().padStart(2, '0')}-${adjustedDate.getDate()}`;
 
       // Navigate to the Meeting page with the constructed URL and meeting details as state
-      navigate(url, { state: { meetingDetails, selectedSlot: updatedSlot, timezone: timezoneArray } });
+      navigate(url, { state: meetingDetails });
     });
   };
 
