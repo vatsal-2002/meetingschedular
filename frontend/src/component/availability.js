@@ -682,7 +682,7 @@ const Availability = () => {
 
   useEffect(() => {
     // Fetch the token from sessionStorage
-    const storedToken = sessionStorage.getItem("userToken");
+    const storedToken = sessionStorage.getItem("SignUpToken");
     if (storedToken) {
       setToken(storedToken);
     }
@@ -765,7 +765,7 @@ const Availability = () => {
 
       const responseData = await response.json();
       console.log("Response:", responseData);
-      navigate("/index");
+      navigate("/login");
     } catch (error) {
       console.error("Error:", error.message || "Internal server error");
     }

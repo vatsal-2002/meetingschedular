@@ -2699,9 +2699,14 @@ button.btn-view-live {
   font-size: 20px;
 }
 
-.namelable,
+.nametextbox,
 .emailtextbox {
   border-color: #7f888f !important;
+}
+
+.nametextbox:focus,
+.emailtextbox:focus {
+  border-color: #0137fc !important;
 }
 
 .meetingpagediv {
@@ -2710,4 +2715,12 @@ button.btn-view-live {
 
 .viewpagediv {
   width: 1100px !important;
+}
+
+.w-4 {
+  width: 4%;
+}
+
+.w-10 {
+  width: 10%;
 }

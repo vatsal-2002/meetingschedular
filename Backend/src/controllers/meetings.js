@@ -30,7 +30,28 @@ const createSlot = (req, res) => {
     }
 };
 
+const userMeetings = (req, res) => {
+    const userId = req.params.id;
+    try {
+        // const selectQuery = `SELECT  id , meetingSettingsId , guestname , guestemail, slotbooked FROM meeting where userId = ? AND deletedAt IS NULL`;
+        const selectQuery = `SELECT * FROM meeting m JOIN meeting_settings ms ON m.meetingSettingsId = ms.id WHERE userId = ? AND deletedAt IS NULL;`;
+
+
+        db.query(selectQuery, [userId], (error, results) => {
+            if (error) {
+                console.log(error, 'Internal Server Error inside query');
+            } else {
+                const schedules = results.map(schedule => schedule);
+                res.status(200).json(schedules);
+            }
+        });
+    } catch (err) {
+        console.error('Error in getAllSchedules:', err);
+    }
+};
+
 module.exports = {
-    createSlot
+    createSlot,
+    userMeetings
 };
 

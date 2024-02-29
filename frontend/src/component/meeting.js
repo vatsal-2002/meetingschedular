@@ -284,7 +284,7 @@ const Meeting = () => {
                     <label>Name *</label>
                     <input
                       type="text"
-                      className="form-control mb-3 w-100 namelable"
+                      className="form-control mb-3 w-100 nametextbox"
                       value={userName}
                       onChange={handleNameChange}
                     />
