@@ -14,7 +14,6 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
   const [selectedSchedule, setSelectedSchedule] = useState("");
   const [fetchedWeeklyName, setFetchedWeeklyName] = useState("");
   const [scheduleNames, setScheduleNames] = useState([]);
-  // const [selectedTimezone, setSelectedTimezone] = useState("");
   const [textboxCounts, setTextboxCounts] = useState({
     SUN: { count: 1, isChecked: true, timeSlots: [] },
     MON: { count: 1, isChecked: true, timeSlots: [] },
@@ -25,13 +24,12 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
     SAT: { count: 1, isChecked: true, timeSlots: [] },
   });
 
-  const [selectedScheduleId, setSelectedScheduleId] = useState(null); // Add state for selected schedule ID
+  const [selectedScheduleId, setSelectedScheduleId] = useState(null); 
   const [selectedScheduleName, setSelectedScheduleName] = useState("");
   const [schedules, setSchedules] = useState([]);
   const navigate = useNavigate();
 
   const mapApiDayToDisplayOrder = (apiDay) => {
-    // Mapping API indexing (0-6) to desired display order (0-6 for Sunday to Saturday)
     const displayOrder = [0, 1, 2, 3, 4, 5, 6];
     return displayOrder.indexOf(apiDay);
   };
@@ -66,7 +64,6 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
             const fetchedWeeklyHours = data[0].weeklyhours;
             const scheduleData = fetchedWeeklyHours;
             dispatch(setScheduleData(scheduleData));
-            // console.log("Schedule data stored in Redux:", scheduleData);
             const fetchedWeeklyName = data[0].name;
             setFetchedWeeklyName(fetchedWeeklyName);
             setScheduleNames(data.map(schedule => schedule.name));
@@ -101,7 +98,7 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
               ),
             }));
 
-            setSelectedScheduleId(data[0].id); // Set the ID of the first schedule initially
+            setSelectedScheduleId(data[0].id); 
           } else {
             console.warn('Invalid data format or empty array');
           }
@@ -152,8 +149,7 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
         .then((response) => response.json())
         .then((data) => {
           console.log("Schedule updated successfully:", data);
-          dispatch(setScheduleData(weeklyhours)); // Store updated data in Redux
-          // window.location.reload(); // Refresh the page
+          dispatch(setScheduleData(weeklyhours)); 
         })
         .catch((error) => console.error("Error updating schedule:", error));
     } else {

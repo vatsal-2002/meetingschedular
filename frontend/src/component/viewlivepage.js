@@ -21,10 +21,6 @@ const Viewlivepage = () => {
 
   const { weeklyhoursArray } = location.state || {};
 
-  // useEffect(() => {
-  //   console.log("weeklyhoursArray:", weeklyhoursArray);
-  // }, [weeklyhoursArray]);
-
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [userFullName, setUserFullName] = useState('');
   const [userName, setUsername] = useState('');
@@ -136,7 +132,6 @@ const Viewlivepage = () => {
         }
 
         const userData = await response.json();
-        console.log(userData.username)
         setUserFullName(`${userData.firstname} ${userData.lastname}`);
         setUsername(`${userData.username}`)
       } catch (error) {
@@ -421,7 +416,7 @@ const Viewlivepage = () => {
       <div className="container-fuild">
         <div className="row d-flex">
           <div className="col-12 d-flex align-items-center bg-soft-secondary vh-100">
-            <div className="container create-preview">
+            <div className="container create-preview viewpagediv">
               <div className="row d-flex">
                 <div className="col-5 d-flex flex-column p-4">
                   <label>

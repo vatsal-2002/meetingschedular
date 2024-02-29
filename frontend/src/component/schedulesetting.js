@@ -297,7 +297,6 @@ const Schedulesetting = () => {
       timezoneArray,
       selectedSchedule,
       weeklyhoursArray,
-      // defaultTimezone: defaultTimeZone 
     };
     navigate(url, { state });
   };

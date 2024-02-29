@@ -200,12 +200,6 @@ const Meeting = () => {
   };
 
 
-
-
-
-
-
-
   const handleEventPageNavigation = () => {
     navigate('/event');
   };
@@ -252,8 +246,8 @@ const Meeting = () => {
       <div className="container-fuild">
         <row>
           <div className="col-12 d-flex align-items-center bg-soft-secondary vh-100">
-            <div className="container create-preview">
-              <div className="row d-flex">
+            <div className="container create-preview meetingpagediv">
+              <div className="row d-flex ">
                 <div className="col-6 d-flex flex-column p-4">
                   <label>
                     {userFullName ? userFullName : "UserName name here"}
@@ -290,14 +284,14 @@ const Meeting = () => {
                     <label>Name *</label>
                     <input
                       type="text"
-                      className="form-control mb-3 w-100"
+                      className="form-control mb-3 w-100 namelable"
                       value={userName}
                       onChange={handleNameChange}
                     />
                     <label>Email *</label>
                     <input
                       type="email"
-                      className="form-control mb-3 w-100"
+                      className="form-control mb-3 w-100 emailtextbox"
                       value={userEmail}
                       onChange={handleEmailChange}
                     />
