@@ -46,8 +46,6 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
   useEffect(() => {
     const token = sessionStorage.getItem('userToken');
 
-
-
     if (token) {
       const [header, payload, signature] = token.split('.');
       const decodedHeader = JSON.parse(atob(header));

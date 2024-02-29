@@ -309,7 +309,9 @@ const Viewlivepage = () => {
 
       const adjustedMonth = adjustedDate.getMonth() + 1;
 
-      const url = `/meeting?${encodeURIComponent(userName)}/${encodeURIComponent(meetingDetails.name)}/${meetingDetails.duration}/${encodeURIComponent(meetingDetails.location)}&time=${formattedStartTime}&${formattedTimezoneOffset}?&date=${adjustedDate.getFullYear()}-${(adjustedMonth).toString().padStart(2, '0')}-${adjustedDate.getDate()}`;
+      const formattedTimezoneArray = timezoneArray.replace('/', '-');
+
+      const url = `/meeting?id=${meetingId}/${encodeURIComponent(userName)}/${encodeURIComponent(meetingDetails.name)}/&duration=${meetingDetails.duration}&=${encodeURIComponent(meetingDetails.location)}&time=${formattedStartTime}&${formattedTimezoneOffset}?&date=${adjustedDate.getFullYear()}-${(adjustedMonth).toString().padStart(2, '0')}-${adjustedDate.getDate()}&timezone=${encodeURIComponent(formattedTimezoneArray)}`;
 
       // Navigate to the Meeting page with the constructed URL and meeting details as state
       navigate(url, { state: meetingDetails });

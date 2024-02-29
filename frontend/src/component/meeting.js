@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
-import { Timezones_List } from "./timezones";
+
 
 const Meeting = () => {
   const [userFullName, setUserFullName] = useState('');
@@ -13,6 +13,7 @@ const Meeting = () => {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [timeSlots, setTimeSlots] = useState([]);
+  const [timezone, setTimezone] = useState('');
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -25,6 +26,8 @@ const Meeting = () => {
     const queryParams = new URLSearchParams(location.search);
     const dateTimeString = queryParams.get('date');
     const timeString = queryParams.get('time');
+    const timezoneParam = queryParams.get('timezone');
+    const formattedTimezone = decodeURIComponent(timezoneParam).replace('-', ' ');
     const dateTime = new Date(dateTimeString + 'T' + timeString);
 
     const options = {
@@ -39,7 +42,8 @@ const Meeting = () => {
 
     const formattedDateTime = dateTime.toLocaleString('en-US', options);
     setFormattedDateTime(formattedDateTime);
-  }, [location.search]);
+    setTimezone(formattedTimezone);
+  }, [location.search, location.search]);
 
 
 
@@ -124,21 +128,43 @@ const Meeting = () => {
 
       const queryParams = new URLSearchParams(location.search);
       const startTimeString = queryParams.get('date');
-      const duration = meetingDetails.duration || 30; // Default duration if not available
-      const startTime = new Date(startTimeString);
+      const date = queryParams.get('date');
+      const time = queryParams.get('time');
+      const duration = queryParams.get('duration') || 30; // Default duration if not available
+      console.log(duration);
 
-      // Calculate end time based on start time and duration
-      const endTime = new Date(startTime.getTime() + duration * 60000); // Duration in milliseconds
+      // Parse the start time from the URL
+      const startTime = new Date(`${date} ${time}`);
 
-      // Format dates as per your desired format
-      const formatOptions = { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
-      const formattedStartTime = startTime.toLocaleString('en-US', formatOptions);
-      const formattedEndTime = endTime.toLocaleString('en-US', formatOptions);
+      // Calculate the end time by adding the duration to the start time
+      let endTime = new Date(startTime.getTime() + duration * 60000); // Convert duration to milliseconds
 
-      const slotBookedObject = {
-        start: formattedStartTime,
-        end: formattedEndTime,
+      // Check if endTime exceeds 24 hours, then increment the date by 1
+      if (endTime.getDate() !== startTime.getDate()) {
+        endTime.setDate(endTime.getDate() + 1);
+      }
+
+      // Format the end time as HH:mm
+      const formattedEndTime = endTime.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+
+      console.log(`Formatted End Time: ${formattedEndTime}`);
+
+      const startslot = `${date} ${time}`;
+      console.log(`Start Slot: ${startslot}`);
+
+      const endslot = `${endTime.toISOString().split('T')[0]} ${formattedEndTime}`;
+      console.log(`End Slot: ${endslot}`);
+
+      const slotBooked = {
+        start: startslot,
+        end: endslot,
       };
+
+      console.log(slotBooked);
 
       const response = await fetch('http://localhost:8000/slotbooked', {
         method: 'POST',
@@ -151,7 +177,7 @@ const Meeting = () => {
           meetingId,
           guestname: userName,
           guestemail: userEmail,
-          slotbooked: slotBookedObject, // Convert to JSON object
+          slotbooked: slotBooked,
         }),
       });
 
@@ -167,10 +193,13 @@ const Meeting = () => {
       setUserName('');
       setUserEmail('');
       setTimeSlots([]);
+
     } catch (error) {
       console.error("Error scheduling meeting:", error.message);
     }
   };
+
+
 
 
 
@@ -182,7 +211,13 @@ const Meeting = () => {
   };
 
   const handleMeetingSettingsNavigation = () => {
-    navigate(`/meetingsetting?id=${meetingId}`);
+    if (meetingId) {
+      // Split the meetingId by '/' and get the first element
+      const extractedId = meetingId.split('/')[0];
+      navigate(`/meetingsetting?id=${extractedId}`);
+    } else {
+      console.error('Meeting ID not available');
+    }
   };
 
 
@@ -246,7 +281,7 @@ const Meeting = () => {
                     {formattedDateTime ? formattedDateTime : "9:00am - 9:30am, Wednesday, January 31, 2024"}
                   </label>
                   <label>
-                    <span className="mdi mdi-earth"></span>India Standard Time
+                    <span className="mdi mdi-earth"></span>{timezone || "India Standard Time"}
                   </label>
                 </div>
                 <div className="col-6 d-flex align-items-center h-550 preview-right">
