@@ -1,6 +1,8 @@
 import Meetingsettingsidebar from './meetingsettingsidebar';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Meetingsetting = () => {
   const location = useLocation();
@@ -8,19 +10,35 @@ const Meetingsetting = () => {
   const [meetingDuration, setMeetingDuration] = useState('');
   const [meetingLocation, setMeetingLocation] = useState('');
   const [userFullName, setUserFullName] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Extract id from the query parameters
+    const params = new URLSearchParams(location.search);
+    const message = params.get('message');
+
+    if (message) {
+      toast.success(message, { position: 'top-center', autoClose: 1000 });
+
+      params.delete('message');
+
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+
+      setTimeout(() => {
+        window.location.replace(newUrl);
+      }, 1000);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
     const params = new URLSearchParams(location.search);
     const id = params.get('id');
 
-    // Fetch meeting details based on the id
     const fetchMeetingDetails = async () => {
       try {
         const userToken = sessionStorage.getItem("userToken");
 
         const response = await fetch(
-          `http://localhost:8000/meetingSettings/${id}`, // Use the id to fetch meeting details
+          `http://localhost:8000/meetingSettings/${id}`,
           {
             method: "GET",
             headers: {
@@ -34,7 +52,6 @@ const Meetingsetting = () => {
         }
 
         const meetingDetailsData = await response.json();
-        // Update state with fetched data
         setMeetingName(meetingDetailsData.name || '');
         setMeetingDuration(meetingDetailsData.duration || '');
         setMeetingLocation(meetingDetailsData.location || '');
@@ -49,11 +66,9 @@ const Meetingsetting = () => {
   }, [location.search]);
 
   useEffect(() => {
-    // Decode user token to get user ID
     const userToken = sessionStorage.getItem("userToken");
     const decodedToken = decodeToken(userToken);
     const userId = decodedToken.id;
-    // Fetch user details using user ID
     const fetchUserDetails = async () => {
       try {
         const response = await fetch(
@@ -93,6 +108,7 @@ const Meetingsetting = () => {
 
   return (
     <>
+      <ToastContainer />
       <div className="container-fuild">
         <row className="d-flex">
           <div className="col-3">
