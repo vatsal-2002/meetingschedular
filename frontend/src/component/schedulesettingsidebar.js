@@ -6,9 +6,10 @@
 // import { setSelectedSchedule as setSelectedSchedule1 } from './actions/meetingActions';
 // import { SET_SELECTED_SCHEDULE } from './actions/type';
 
-
 // const Schedulesettingsidebar = ({ onScheduleChange }) => {
 //   const scheduleData = useSelector(state => state.meetings.scheduleData);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
 
 //   const dispatch = useDispatch();
 //   const [selectedSchedule, setSelectedSchedule] = useState("");
@@ -40,7 +41,6 @@
 
 //   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-
 //   useEffect(() => {
 //     const token = sessionStorage.getItem('userToken');
 
@@ -58,8 +58,14 @@
 //           'Authorization': `${token}`,
 //         },
 //       })
-//         .then(response => response.json())
+//         .then(response => {
+//           if (!response.ok) {
+//             throw new Error('Failed to fetch data');
+//           }
+//           return response.json();
+//         })
 //         .then(data => {
+//           setLoading(false);
 //           if (Array.isArray(data) && data.length > 0) {
 //             const fetchedWeeklyHours = data[0].weeklyhours;
 //             const scheduleData = fetchedWeeklyHours;
@@ -91,7 +97,6 @@
 //                       },
 //                     ];
 //                   } else {
-//                     // Day data not found in API, set as unchecked and unavailable
 //                     return [day, { count: 1, isChecked: false, timeSlots: [generateTimeSlot()] }];
 //                   }
 //                 })
@@ -104,13 +109,15 @@
 //           }
 //           setSchedules(data);
 //         })
-//         .catch(error => console.error('Error fetching schedules:', error));
+//         .catch(error => {
+//           console.error('Error fetching schedules:', error);
+//           setLoading(false);
+//           setError('Failed to fetch data. Please try again later.');
+//         });
 //     } else {
 //       console.error('Token not found');
 //     }
 //   }, []);
-
-
 
 //   const handleUpdateButtonClick = () => {
 //     const token = sessionStorage.getItem("userToken");
@@ -157,8 +164,6 @@
 //     }
 //   };
 
-
-
 //   const handleScheduleChange = (selectedSchedule) => {
 //     dispatch(setSelectedSchedule1(selectedSchedule));
 //     onScheduleChange(selectedSchedule);
@@ -203,8 +208,6 @@
 //       }));
 //     }
 //   };
-
-
 
 //   const timeOptions = [];
 //   for (let hour = 0; hour <= 23; hour++) {
@@ -271,7 +274,6 @@
 //       );
 //       newCounts[day].count = newCounts[day].timeSlots.length;
 
-//       // If it's the last time slot, uncheck the checkbox and hide the elements
 //       if (newCounts[day].count === 0) {
 //         newCounts[day].isChecked = false;
 //       }
@@ -294,17 +296,23 @@
 //   const location = useLocation();
 
 //   const goToMeetingSettings = () => {
-//     // Extract the meetingId from the URL params
 //     const urlParams = new URLSearchParams(location.search);
 //     const meetingId = urlParams.get('id');
 
-//     // Navigate to the meeting setting page with the extracted meetingId
 //     if (meetingId) {
 //       navigate(`/meetingsetting?id=${meetingId}`);
 //     } else {
 //       console.error('Meeting ID not found in URL params');
 //     }
 //   };
+
+//   if (loading) {
+//     return <div>Loading...</div>;
+//   }
+
+//   if (error) {
+//     return <div>Error: {error}</div>;
+//   }
 
 //   return (
 //     <>
@@ -355,7 +363,7 @@
 //                         onChange={() => handleCheckboxChange(day)}
 //                       />
 //                     </div>
-//                     <div className="w-10">
+//                     <div>
 //                       <label className="weekly-hour">{day}</label>
 //                     </div>
 //                     {textboxCounts[day].isChecked ? (
@@ -382,7 +390,7 @@
 //                                     </option>
 //                                   ))}
 //                                 </select>
-//                                 <label className="mt-2 mx-2">-</label>
+//                                 <label className="mt-2">-</label>
 //                                 <select
 //                                   className="form-control mb-3 weekly-hour-textbox d-inline-block w-50"
 //                                   value={timeSlot.end}
@@ -427,7 +435,6 @@
 //                   </div>
 //                 ))}
 //                 <div className="meeting-controller d-flex justify-content-start me-4">
-//                   {/* <button className="meeting-cancel">Cancel</button> */}
 //                   <button
 //                     className="btn btn-primary"
 //                     onClick={handleUpdateButtonClick}
@@ -453,6 +460,8 @@ import { setScheduleData } from './actions/meetingActions';
 import { useSelector } from 'react-redux';
 import { setSelectedSchedule as setSelectedSchedule1 } from './actions/meetingActions';
 import { SET_SELECTED_SCHEDULE } from './actions/type';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Schedulesettingsidebar = ({ onScheduleChange }) => {
   const scheduleData = useSelector(state => state.meetings.scheduleData);
@@ -506,62 +515,62 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
           'Authorization': `${token}`,
         },
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setLoading(false);
-        if (Array.isArray(data) && data.length > 0) {
-          const fetchedWeeklyHours = data[0].weeklyhours;
-          const scheduleData = fetchedWeeklyHours;
-          dispatch(setScheduleData(scheduleData));
-          const fetchedWeeklyName = data[0].name;
-          setFetchedWeeklyName(fetchedWeeklyName);
-          setScheduleNames(data.map(schedule => schedule.name));
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch data');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setLoading(false);
+          if (Array.isArray(data) && data.length > 0) {
+            const fetchedWeeklyHours = data[0].weeklyhours;
+            const scheduleData = fetchedWeeklyHours;
+            dispatch(setScheduleData(scheduleData));
+            const fetchedWeeklyName = data[0].name;
+            setFetchedWeeklyName(fetchedWeeklyName);
+            setScheduleNames(data.map(schedule => schedule.name));
 
-          setTextboxCounts((prevCounts) => ({
-            ...prevCounts,
-            ...Object.fromEntries(
-              daysOfWeek.map((day) => {
-                const apiDayIndex = fetchedWeeklyHours.findIndex(
-                  (item) => mapApiDayToDisplayOrder(item.day) === daysOfWeek.indexOf(day)
-                );
+            setTextboxCounts((prevCounts) => ({
+              ...prevCounts,
+              ...Object.fromEntries(
+                daysOfWeek.map((day) => {
+                  const apiDayIndex = fetchedWeeklyHours.findIndex(
+                    (item) => mapApiDayToDisplayOrder(item.day) === daysOfWeek.indexOf(day)
+                  );
 
-                if (apiDayIndex !== -1) {
-                  const apiDay = fetchedWeeklyHours[apiDayIndex];
-                  return [
-                    day,
-                    {
-                      count: apiDay.slots.length,
-                      isChecked: apiDay.slots.length > 0,
-                      timeSlots: apiDay.slots.map((slot, index) => ({
-                        id: index,
-                        start: `${slot.start.hour}:${slot.start.minute}`,
-                        end: `${slot.end.hour}:${slot.end.minute}`,
-                      })),
-                    },
-                  ];
-                } else {
-                  return [day, { count: 1, isChecked: false, timeSlots: [generateTimeSlot()] }];
-                }
-              })
-            ),
-          }));
+                  if (apiDayIndex !== -1) {
+                    const apiDay = fetchedWeeklyHours[apiDayIndex];
+                    return [
+                      day,
+                      {
+                        count: apiDay.slots.length,
+                        isChecked: apiDay.slots.length > 0,
+                        timeSlots: apiDay.slots.map((slot, index) => ({
+                          id: index,
+                          start: `${slot.start.hour}:${slot.start.minute}`,
+                          end: `${slot.end.hour}:${slot.end.minute}`,
+                        })),
+                      },
+                    ];
+                  } else {
+                    return [day, { count: 1, isChecked: false, timeSlots: [generateTimeSlot()] }];
+                  }
+                })
+              ),
+            }));
 
-          setSelectedScheduleId(data[0].id);
-        } else {
-          console.warn('Invalid data format or empty array');
-        }
-        setSchedules(data);
-      })
-      .catch(error => {
-        console.error('Error fetching schedules:', error);
-        setLoading(false);
-        setError('Failed to fetch data. Please try again later.');
-      });
+            setSelectedScheduleId(data[0].id);
+          } else {
+            console.warn('Invalid data format or empty array');
+          }
+          setSchedules(data);
+        })
+        .catch(error => {
+          console.error('Error fetching schedules:', error);
+          setLoading(false);
+          setError('Failed to fetch data. Please try again later.');
+        });
     } else {
       console.error('Token not found');
     }
@@ -604,13 +613,18 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
         .then((response) => response.json())
         .then((data) => {
           console.log("Schedule updated successfully:", data);
+          toast.success('Schedule updated successfully.', { position: 'top-center', autoClose: 1000 });
           dispatch(setScheduleData(weeklyhours));
         })
-        .catch((error) => console.error("Error updating schedule:", error));
+        .catch((error) => {
+          console.error("Error updating schedule:", error);
+          toast.error('Error updating schedule. Please try again later.', { position: 'top-center', autoClose: 1000 });
+        });
     } else {
       console.error("Token or selected schedule ID not found");
     }
   };
+
 
   const handleScheduleChange = (selectedSchedule) => {
     dispatch(setSelectedSchedule1(selectedSchedule));
@@ -754,16 +768,9 @@ const Schedulesettingsidebar = ({ onScheduleChange }) => {
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <>
+      <ToastContainer />
       <div className="sidebar-block">
         <nav id="sidebar" className="sidebar-wrapper toggled">
           <div

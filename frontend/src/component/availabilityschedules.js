@@ -5,6 +5,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Sidebar from "./sidebar";
 import Topheader from "./topheader";
 import { Timezones_List } from "./timezones";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Availabilityschedules = () => {
     const [scheduleNames, setScheduleNames] = useState([]);
@@ -106,13 +108,23 @@ const Availabilityschedules = () => {
                 },
                 body: JSON.stringify(requestBody),
             })
-                .then((response) => response.json())
-                .then((data) => {
-                    // Handle the response from the API
-                    console.log("Schedule created successfully:", data);
-                    // You may want to update the state or perform other actions here
+                .then((response) => {
+                    if (response.ok) {
+                        // Schedule created successfully
+                        return response.json().then((data) => {
+                            console.log("Schedule created successfully:", data);
+                            toast.success('Schedule created successfully.', { position: 'top-center', autoClose: 1000 });
+                        });
+                    } else {
+                        // Error creating schedule
+                        console.error("Error creating schedule:", response.statusText);
+                        toast.error('Error creating schedule. Please try again later.', { position: 'top-center', autoClose: 1000 });
+                    }
                 })
-                .catch((error) => console.error("Error creating schedule:", error));
+                .catch((error) => {
+                    console.error("Error creating schedule:", error);
+                    toast.error('Error creating schedule. Please try again later.', { position: 'top-center', autoClose: 1000 });
+                });
 
             // Close the modal after making the API call
             handleClose();
@@ -227,8 +239,10 @@ const Availabilityschedules = () => {
                     }
 
                     console.log("Schedule deleted successfully");
+                    toast.success('Schedule Deleted successfully.', { position: 'top-center', autoClose: 1000 });
                 } else {
                     console.error("Error deleting schedule");
+                    toast.error('Error Deleting schedule. Please try again later.', { position: 'top-center', autoClose: 1000 });
                 }
             } catch (error) {
                 console.error("Error deleting schedule:", error);
@@ -499,17 +513,39 @@ const Availabilityschedules = () => {
                 },
                 body: JSON.stringify(requestBody),
             })
-                .then((response) => response.json())
-                .then((data) => {
-                    // Handle the response from the API
-                    console.log("Schedule updated successfully:", data);
-                    // You may want to update the state or perform other actions here
+                .then((response) => {
+                    if (response.ok) {
+                        // Schedule updated successfully
+                        return response.json().then((data) => {
+                            console.log("Schedule updated successfully:", data);
+                            toast.success("Schedule updated successfully.", {
+                                position: "top-center",
+                                autoClose: 2000,
+                            });
+                        });
+                    } else {
+                        // Error updating schedule
+                        return response.json().then((error) => {
+                            console.error("Error updating schedule:", error);
+                            toast.error("Error updating schedule. Please try again later.", {
+                                position: "top-center",
+                                autoClose: 2000,
+                            });
+                        });
+                    }
                 })
-                .catch((error) => console.error("Error updating schedule:", error));
+                .catch((error) => {
+                    console.error("Error updating schedule:", error);
+                    toast.error("Error updating schedule. Please try again later.", {
+                        position: "top-center",
+                        autoClose: 2000,
+                    });
+                });
         } else {
             console.error("Token or selected schedule ID not found");
         }
     };
+
 
     const goToMeetingSettings = () => {
         navigate("/meetingsetting");
@@ -519,6 +555,7 @@ const Availabilityschedules = () => {
 
     return (
         <>
+            <ToastContainer />
             <div className={`page-wrapper ${isToggled ? "toggled" : ""}`}>
                 <Sidebar isToggled={isToggled} handleToggle={handleToggle} />
                 <main className="page-content bg-light">

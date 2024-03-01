@@ -18,7 +18,6 @@ import Viewlivepage from './component/viewlivepage';
 import Meeting from './component/meeting';
 import Availabilityschedules from './component/availabilityschedules';
 
-
 function App() {
   return (
     <Provider store={store}>
