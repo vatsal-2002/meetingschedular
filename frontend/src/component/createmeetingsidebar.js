@@ -98,7 +98,7 @@ const Createmeetingsidebar = ({
           <div className="sidebar-content" data-simplebar="" style={{ height: "calc(100% - 60px)" }}>
             <div className="create-meeting mt-3 p-3">
               <button className="meeting-cancel" onClick={handleCancel}>
-                <span className="mdi mdi-arrow-left-thick"></span>Cancel
+                <span className="mdi mdi-arrow-left-thick back"></span>Cancel
               </button>
               <h4 className="mt-3">New Meeting</h4>
             </div>

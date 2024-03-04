@@ -10,24 +10,6 @@ const Meetingsetting = () => {
   const [meetingDuration, setMeetingDuration] = useState('');
   const [meetingLocation, setMeetingLocation] = useState('');
   const [userFullName, setUserFullName] = useState('');
-  // const [message, setMessage] = useState('');
-
-  // useEffect(() => {
-  //   const params = new URLSearchParams(location.search);
-  //   const message = params.get('message');
-
-  //   if (message) {
-  //     toast.success(message, { position: 'top-center', autoClose: 1000 });
-
-  //     params.delete('message');
-
-  //     const newUrl = `${window.location.pathname}?${params.toString()}`;
-
-  //     setTimeout(() => {
-  //       window.location.replace(newUrl);
-  //     }, 1000);
-  //   }
-  // }, [location.search]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);

@@ -101,6 +101,7 @@ const Viewlivepage = () => {
       fetchMeeting();
     }
   }, [meetingId, dispatch]);
+
   const decodeToken = (token) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -256,6 +257,8 @@ const Viewlivepage = () => {
   };
 
   const handleNextButtonClick = (slot) => {
+    const adjustedDate = new Date(selectedDate);
+    const adjustedMonth = adjustedDate.getMonth() + 1;
 
     settimezoneArray((prevTimezone) => {
       // Find the offset corresponding to the selected timezone
@@ -273,9 +276,9 @@ const Viewlivepage = () => {
       const formattedTimezoneOffset = offsetParts ? offsetParts[1] : "+00:00";
 
       // Format the selected date to match the desired format
-      const formattedDate = selectedDate.toISOString().split('T')[0];
-      // const timezoneOffset = new Date().getTimezoneOffset() / 60;
-      const timezoneOffsetString = timezoneOffset >= 0 ? `+${timezoneOffset}` : timezoneOffset.toString();
+      const formattedDay = adjustedDate.getDate().toString().padStart(2, '0');
+      const formattedMonth = (adjustedMonth).toString().padStart(2, '0');
+      const formattedDate = `${adjustedDate.getFullYear()}-${formattedMonth}-${formattedDay}`;
 
       // Adjust the start time to the selected time slot's start time
       const adjustedStartTime = new Date(selectedDate);
@@ -299,21 +302,15 @@ const Viewlivepage = () => {
         minute: 'numeric',
         hour12: false,
       });
-      const adjustedDate = new Date(selectedDate);
-      adjustedDate.setHours(adjustedStartTime.getHours(), adjustedStartTime.getMinutes(), 0);
-
-      const adjustedMonth = adjustedDate.getMonth() + 1;
 
       const formattedTimezoneArray = timezoneArray.replace('/', '-');
 
-      const url = `/meeting?id=${meetingId}/${encodeURIComponent(userName)}/${encodeURIComponent(meetingDetails.name)}/&duration=${meetingDetails.duration}&=${encodeURIComponent(meetingDetails.location)}&time=${formattedStartTime}&${formattedTimezoneOffset}?&date=${adjustedDate.getFullYear()}-${(adjustedMonth).toString().padStart(2, '0')}-${adjustedDate.getDate()}&timezone=${encodeURIComponent(formattedTimezoneArray)}`;
+      const url = `/meeting?id=${meetingId}/${encodeURIComponent(userName)}/${encodeURIComponent(meetingDetails.name)}/&duration=${meetingDetails.duration}&=${encodeURIComponent(meetingDetails.location)}&time=${formattedStartTime}&${formattedTimezoneOffset}?&date=${formattedDate}&timezone=${encodeURIComponent(formattedTimezoneArray)}`;
 
       // Navigate to the Meeting page with the constructed URL and meeting details as state
       navigate(url, { state: meetingDetails });
     });
   };
-
-
 
 
   const handleDateChange = (date) => {
