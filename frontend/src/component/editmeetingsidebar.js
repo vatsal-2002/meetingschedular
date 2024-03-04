@@ -438,18 +438,17 @@
 
 // export default EditMeetingsidebar;
 
-
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setMeetingDetails } from './actions/meetingActions';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 const EditMeetingsidebar = ({ initialMeetingName, initialSelectedDuration, initialMeetingLocation, setMeetingName, setSelectedDuration, setMeetingLocation, meetingId }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
+    // const location = useLocation();
 
     const currentMeeting = useSelector(state => state.meetings.currentMeeting);
 
@@ -559,14 +558,14 @@ const EditMeetingsidebar = ({ initialMeetingName, initialSelectedDuration, initi
             if (response.status === 200) {
                 const data = await response.json();
                 dispatch(setMeetingDetails(data));
-                navigate(`/meetingsetting?id=${meetingId}&message=Meeting%20updated%20successfully.`);
+                navigate(`/meetingsetting?id=${meetingId}`);
             } else {
                 console.error("Failed to update meeting:", response.data.error);
-                toast.error('Failed to update meeting. Please try again later.', { position: 'top-center', autoClose: 1000 });
+                // toast.error('Failed to update meeting. Please try again later.', { position: 'top-center', autoClose: 1000 });
             }
         } catch (error) {
             console.error("Error updating meeting:", error);
-            toast.error('Error updating meeting. Please try again later.', { position: 'top-center', autoClose: 1000 });
+            // toast.error('Error updating meeting. Please try again later.', { position: 'top-center', autoClose: 1000 });
         }
     };
 
@@ -576,7 +575,6 @@ const EditMeetingsidebar = ({ initialMeetingName, initialSelectedDuration, initi
 
     return (
         <>
-            <ToastContainer />
             {error && <div>Error: {error}</div>}
             <div className="sidebar-block">
                 <nav id="sidebar" className="sidebar-wrapper toggled">
@@ -597,7 +595,7 @@ const EditMeetingsidebar = ({ initialMeetingName, initialSelectedDuration, initi
                                 value={meetingName}
                                 onChange={(e) => {
                                     setLocalMeetingName(e.target.value);
-                                    setMeetingName(e.target.value); // Update the meeting name in the main component
+                                    setMeetingName(e.target.value);
                                 }}
                             />
 

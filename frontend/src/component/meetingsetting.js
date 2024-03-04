@@ -1,8 +1,8 @@
 import Meetingsettingsidebar from './meetingsettingsidebar';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 const Meetingsetting = () => {
   const location = useLocation();
@@ -10,24 +10,24 @@ const Meetingsetting = () => {
   const [meetingDuration, setMeetingDuration] = useState('');
   const [meetingLocation, setMeetingLocation] = useState('');
   const [userFullName, setUserFullName] = useState('');
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const message = params.get('message');
+  // useEffect(() => {
+  //   const params = new URLSearchParams(location.search);
+  //   const message = params.get('message');
 
-    if (message) {
-      toast.success(message, { position: 'top-center', autoClose: 1000 });
+  //   if (message) {
+  //     toast.success(message, { position: 'top-center', autoClose: 1000 });
 
-      params.delete('message');
+  //     params.delete('message');
 
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
+  //     const newUrl = `${window.location.pathname}?${params.toString()}`;
 
-      setTimeout(() => {
-        window.location.replace(newUrl);
-      }, 1000);
-    }
-  }, [location.search]);
+  //     setTimeout(() => {
+  //       window.location.replace(newUrl);
+  //     }, 1000);
+  //   }
+  // }, [location.search]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -108,7 +108,6 @@ const Meetingsetting = () => {
 
   return (
     <>
-      <ToastContainer />
       <div className="container-fuild">
         <row className="d-flex">
           <div className="col-3">

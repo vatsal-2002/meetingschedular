@@ -2725,15 +2725,10 @@ button.btn-view-live {
   width: 10%;
 }
 
-.toggle-button {
+/* .toggle-button {
   background-color: #0d6efd !important;
-}
+} */
 
 .toggle-button:hover {
   background-color: #005fec !important;
-}
-
-.mdi-arrow-right-thick,
-.mdi-arrow-left-thick {
-  color: #fff;
 }
