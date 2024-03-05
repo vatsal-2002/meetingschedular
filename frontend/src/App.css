@@ -2750,3 +2750,20 @@ button.btn-view-live {
 .event-button:hover {
   color: #005fec;
 }
+
+.meeting-success {
+  border: 2px solid #cccccc;
+  border-radius: 8px;
+  padding: 2% 10% 1% 2%;
+}
+
+.error-row {
+  width: 100%;
+}
+.dropdown-width {
+  width: 27%;
+}
+
+.dropdown-width-se {
+  width: 70%;
+}
