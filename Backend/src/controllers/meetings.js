@@ -13,7 +13,7 @@ const createSlot = (req, res) => {
                 return res.json({ error });
             }
 
-            const selectQuery = `SELECT guestname, guestemail, slotBooked FROM meeting WHERE id = ?`;
+            const selectQuery = `SELECT meetingSettingsId, guestname, guestemail, slotBooked FROM meeting WHERE id = ?`;
             db.query(selectQuery, [results.insertId], (selectError, selectResults) => {
                 if (selectError) {
                     console.log('Internal Server Error for select');
@@ -26,32 +26,39 @@ const createSlot = (req, res) => {
         });
     } catch (err) {
         console.error('Error in createSlot:', err);
-        return res.json({ error: err.message });
+        return res.json({ error: err.message || "Internal server error" });
     }
 };
 
-const userMeetings = (req, res) => {
-    const userId = req.params.id;
+const getMeetingDetails = (req, res) => {
     try {
-        // const selectQuery = `SELECT  id , meetingSettingsId , guestname , guestemail, slotbooked FROM meeting where userId = ? AND deletedAt IS NULL`;
-        const selectQuery = `SELECT * FROM meeting m JOIN meeting_settings ms ON m.meetingSettingsId = ms.id WHERE userId = ? AND deletedAt IS NULL;`;
-
-
-        db.query(selectQuery, [userId], (error, results) => {
+        const meetingId = req.params.id; // Assuming the meetingId is passed as a route parameter
+        console.log('Meeting ID:', meetingId);
+        const selectQuery = `SELECT * FROM meeting WHERE id = ?`;
+        db.query(selectQuery, [meetingId], (error, results) => {
             if (error) {
-                console.log(error, 'Internal Server Error inside query');
-            } else {
-                const schedules = results.map(schedule => schedule);
-                res.status(200).json(schedules);
+                console.log('Database Error:', error); // Add this line for logging
+                //   console.log('Internal Server Error for meeting details');
+                return res.status(500).json({ error });
             }
+
+            console.log('Query Results:', results); // Add this line for logging
+
+            if (results.length === 0) {
+                return res.status(404).json({ message: 'Meeting not found' });
+            }
+
+            const meetingDetails = results[0];
+            res.status(200).json(meetingDetails);
         });
     } catch (err) {
-        console.error('Error in getAllSchedules:', err);
+        console.error('Error in getMeetingDetails:', err);
+        return res.status(500).json({ error: err.message || "Internal server error" });
     }
 };
+
 
 module.exports = {
     createSlot,
-    userMeetings
+    getMeetingDetails
 };
-

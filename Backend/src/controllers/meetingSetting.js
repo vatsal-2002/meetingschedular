@@ -70,7 +70,7 @@ const getMeetingSettingById = (req, res) => {
 //  update metting_setting By ID
 const updateMeetingSettingById = async (req, res) => {
   const id = Number(req.params.id);
-  const { name, duration, location, link } = req.body;
+  const { scheduleId, name, duration, location, link } = req.body;
 
   if (!Number.isInteger(id) || id <= 0)
     return res.status(400).json({ error: "Invalid Meeting ID" });
@@ -86,6 +86,10 @@ const updateMeetingSettingById = async (req, res) => {
 
       const updateFields = [], updateValues = [];
 
+      if (scheduleId !== undefined) {
+        updateFields.push('scheduleId = ?');
+        updateValues.push(scheduleId);
+      }
       if (name !== undefined) {
         updateFields.push('name = ?');
         updateValues.push(name);

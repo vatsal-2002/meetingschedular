@@ -109,8 +109,6 @@
 // //         setEditModalShow(false);
 // //     };
 
-
-
 // //     const handleCancelEdit = () => {
 // //         setEditModalShow(false);
 // //     };
@@ -505,10 +503,6 @@
 // //         });
 // //     };
 
-
-
-
-
 // //     const handleAddTextbox = (day) => {
 // //         setTextboxCounts((prevCounts) => {
 // //             const lastTimeSlot = prevCounts[day].timeSlots[prevCounts[day].count - 1];
@@ -532,7 +526,6 @@
 // //             };
 // //         });
 // //     };
-
 
 // //     const handleRemoveTimeSlot = (day, id) => {
 // //         setTextboxCounts((prevCounts) => {
@@ -632,7 +625,6 @@
 // //             console.error("Token or selected schedule ID not found");
 // //         }
 // //     };
-
 
 // //     const goToMeetingSettings = () => {
 // //         navigate("/meetingsetting");
@@ -1004,8 +996,6 @@
 //         // Close the modal
 //         setEditModalShow(false);
 //     };
-
-
 
 //     const handleCancelEdit = () => {
 //         setEditModalShow(false);
@@ -1401,10 +1391,6 @@
 //         });
 //     };
 
-
-
-
-
 //     const handleAddTextbox = (day) => {
 //         setTextboxCounts((prevCounts) => {
 //             const lastTimeSlot = prevCounts[day].timeSlots[prevCounts[day].count - 1];
@@ -1428,7 +1414,6 @@
 //             };
 //         });
 //     };
-
 
 //     const handleRemoveTimeSlot = (day, id) => {
 //         setTextboxCounts((prevCounts) => {
@@ -1496,9 +1481,6 @@
 //             return newCounts;
 //         });
 //     };
-
-
-
 
 //     const handleUpdate = () => {
 //         const token = sessionStorage.getItem("userToken");
@@ -1570,7 +1552,6 @@
 //             console.error("Token or selected schedule ID not found");
 //         }
 //     };
-
 
 //     const goToMeetingSettings = () => {
 //         navigate("/meetingsetting");
@@ -1866,8 +1847,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Sidebar from "./sidebar";
 import Topheader from "./topheader";
 import { Timezones_List } from "./timezones";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Availabilityschedules = () => {
     const [scheduleNames, setScheduleNames] = useState([]);
@@ -1906,8 +1887,8 @@ const Availabilityschedules = () => {
 
         if (!editedScheduleName.trim()) {
             // Show an error toast for empty schedule name
-            toast.error('Schedule name cannot be empty.', {
-                position: 'top-center',
+            toast.error("Schedule name cannot be empty.", {
+                position: "top-center",
                 autoClose: 2000,
             });
             return;
@@ -1930,29 +1911,32 @@ const Availabilityschedules = () => {
         const token = sessionStorage.getItem("userToken");
         if (token && selectedScheduleId !== null) {
             try {
-                const response = await fetch(`http://localhost:8000/schedules/${selectedScheduleId}`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `${token}`,
-                    },
-                    body: JSON.stringify({ name: editedScheduleName }),
-                });
+                const response = await fetch(
+                    `http://localhost:8000/schedules/${selectedScheduleId}`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `${token}`,
+                        },
+                        body: JSON.stringify({ name: editedScheduleName }),
+                    }
+                );
 
                 if (response.ok) {
                     console.log("Schedule name updated in the database");
 
                     // Show a success toast
-                    toast.success('Schedule name updated', {
-                        position: 'top-center',
+                    toast.success("Schedule name updated", {
+                        position: "top-center",
                         autoClose: 2000,
                     });
                 } else {
                     console.error("Error updating schedule name in the database");
 
                     // Show an error toast
-                    toast.error('Error updating schedule name. Please try again later.', {
-                        position: 'top-center',
+                    toast.error("Error updating schedule name. Please try again later.", {
+                        position: "top-center",
                         autoClose: 2000,
                     });
                 }
@@ -1960,8 +1944,8 @@ const Availabilityschedules = () => {
                 console.error("Error updating schedule name in the database:", error);
 
                 // Show an error toast
-                toast.error('Error updating schedule name. Please try again later.', {
-                    position: 'top-center',
+                toast.error("Error updating schedule name. Please try again later.", {
+                    position: "top-center",
                     autoClose: 2000,
                 });
             }
@@ -1971,8 +1955,6 @@ const Availabilityschedules = () => {
         setEditModalShow(false);
     };
 
-
-
     const handleCancelEdit = () => {
         setEditModalShow(false);
     };
@@ -1980,6 +1962,15 @@ const Availabilityschedules = () => {
     const handleCreateSchedule = () => {
         if (!newScheduleName.trim()) {
             setShowErrorLabel(true);
+            return;
+        }
+
+        // Check if the new schedule name already exists in the dropdown options
+        if (scheduleNames.includes(newScheduleName)) {
+            toast.error("Schedule name already exists. Please choose a different name.", {
+                position: "top-center",
+                autoClose: 2000,
+            });
             return;
         }
 
@@ -2062,25 +2053,38 @@ const Availabilityschedules = () => {
                         // Schedule created successfully
                         return response.json().then((data) => {
                             console.log("Schedule created successfully:", data);
-                            toast.success('Schedule created successfully.', { position: 'top-center', autoClose: 1000 });
+                            toast.success("Schedule created successfully.", {
+                                position: "top-center",
+                                autoClose: 1000,
+                            });
+
+                            // Clear the input box after successful creation
+                            setNewScheduleName("");
+
+                            // Close the modal after making the API call
+                            handleClose();
                         });
                     } else {
                         // Error creating schedule
                         console.error("Error creating schedule:", response.statusText);
-                        toast.error('Error creating schedule. Please try again later.', { position: 'top-center', autoClose: 1000 });
+                        toast.error("Error creating schedule. Please try again later.", {
+                            position: "top-center",
+                            autoClose: 1000,
+                        });
                     }
                 })
                 .catch((error) => {
                     console.error("Error creating schedule:", error);
-                    toast.error('Error creating schedule. Please try again later.', { position: 'top-center', autoClose: 1000 });
+                    toast.error("Error creating schedule. Please try again later.", {
+                        position: "top-center",
+                        autoClose: 1000,
+                    });
                 });
-
-            // Close the modal after making the API call
-            handleClose();
         } else {
             console.error("Token not found");
         }
     };
+
 
     const [textboxCounts, setTextboxCounts] = useState({
         SUN: { count: 1, isChecked: true, timeSlots: [generateTimeSlot()] },
@@ -2188,10 +2192,16 @@ const Availabilityschedules = () => {
                     }
 
                     console.log("Schedule deleted successfully");
-                    toast.success('Schedule Deleted successfully.', { position: 'top-center', autoClose: 1000 });
+                    toast.success("Schedule Deleted successfully.", {
+                        position: "top-center",
+                        autoClose: 1000,
+                    });
                 } else {
                     console.error("Error deleting schedule");
-                    toast.error('Error Deleting schedule. Please try again later.', { position: 'top-center', autoClose: 1000 });
+                    toast.error("Error Deleting schedule. Please try again later.", {
+                        position: "top-center",
+                        autoClose: 1000,
+                    });
                 }
             } catch (error) {
                 console.error("Error deleting schedule:", error);
@@ -2367,17 +2377,15 @@ const Availabilityschedules = () => {
         });
     };
 
-
-
-
-
     const handleAddTextbox = (day) => {
         setTextboxCounts((prevCounts) => {
             const lastTimeSlot = prevCounts[day].timeSlots[prevCounts[day].count - 1];
             const newStartHour = lastTimeSlot.end.split(":")[0];
             const newStartMinute = lastTimeSlot.end.split(":")[1];
 
-            const newEndHour = (parseInt(newStartHour) + 1).toString().padStart(2, "0");
+            const newEndHour = (parseInt(newStartHour) + 1)
+                .toString()
+                .padStart(2, "0");
             const newEndMinute = newStartMinute;
 
             const newTimeSlot = generateTimeSlot();
@@ -2394,7 +2402,6 @@ const Availabilityschedules = () => {
             };
         });
     };
-
 
     const handleRemoveTimeSlot = (day, id) => {
         setTextboxCounts((prevCounts) => {
@@ -2438,18 +2445,28 @@ const Availabilityschedules = () => {
             const newCounts = { ...prevCounts };
 
             // Find the index of the time slot being edited
-            const index = newCounts[day].timeSlots.findIndex((slot) => slot.id === id);
+            const index = newCounts[day].timeSlots.findIndex(
+                (slot) => slot.id === id
+            );
 
             // Update the field value
             newCounts[day].timeSlots[index][field] = value;
 
             // Check for errors
-            const isSameTime = newCounts[day].timeSlots[index].start === newCounts[day].timeSlots[index].end;
-            const isLessThanStartTime = newCounts[day].timeSlots[index].end < newCounts[day].timeSlots[index].start;
-            const hasOverlap = checkForTimeSlotOverlap(newCounts[day].timeSlots, index);
+            const isSameTime =
+                newCounts[day].timeSlots[index].start ===
+                newCounts[day].timeSlots[index].end;
+            const isLessThanStartTime =
+                newCounts[day].timeSlots[index].end <
+                newCounts[day].timeSlots[index].start;
+            const hasOverlap = checkForTimeSlotOverlap(
+                newCounts[day].timeSlots,
+                index
+            );
             // Update the error states
             newCounts[day].timeSlots[index].hasSameTimeError = isSameTime;
-            newCounts[day].timeSlots[index].hasLessThanStartTimeError = isLessThanStartTime;
+            newCounts[day].timeSlots[index].hasLessThanStartTimeError =
+                isLessThanStartTime;
             newCounts[day].timeSlots[index].hasOverlapError = hasOverlap;
             // Update the time slot errors
             setTimeSlotErrors((prevErrors) => ({
@@ -2462,9 +2479,6 @@ const Availabilityschedules = () => {
             return newCounts;
         });
     };
-
-
-
 
     const handleUpdate = () => {
         const token = sessionStorage.getItem("userToken");
@@ -2537,10 +2551,9 @@ const Availabilityschedules = () => {
         }
     };
 
-
-    const goToMeetingSettings = () => {
-        navigate("/meetingsetting");
-    };
+    // const goToMeetingSettings = () => {
+    //     navigate("/meetingsetting");
+    // };
 
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
@@ -2565,9 +2578,7 @@ const Availabilityschedules = () => {
                                             className="form-control mb-3 mx-3 weekly-hour-textbox d-inline-block"
                                             value={selectedScheduleName}
                                             name="schedule-name"
-                                            onChange={(e) =>
-                                                handleScheduleNameChange(e.target.value)
-                                            }
+                                            onChange={(e) => handleScheduleNameChange(e.target.value)}
                                         >
                                             {scheduleNames.map((name, index) => (
                                                 <option key={index} value={name}>
@@ -2709,82 +2720,74 @@ const Availabilityschedules = () => {
                                                 {textboxCounts[day].isChecked ? (
                                                     <>
                                                         <div className="textbox-input dropdown-width">
-                                                            {textboxCounts[day].timeSlots.map(
-                                                                (timeSlot) => (
-                                                                    <React.Fragment key={timeSlot.id}>
-                                                                        {timeSlot.hidden ? null : (
-                                                                            <div className="d-flex">
-                                                                                <select
-                                                                                    className="form-control mb-3 weekly-hour-textbox d-inline-block w-50"
-                                                                                    value={timeSlot.start}
-                                                                                    onChange={(e) =>
-                                                                                        handleTimeSlotChange(
-                                                                                            day,
-                                                                                            timeSlot.id,
-                                                                                            "start",
-                                                                                            e.target.value
-                                                                                        )
-                                                                                    }
-                                                                                >
-                                                                                    {timeOptions.map((option, i) => (
-                                                                                        <option key={i} value={option}>
-                                                                                            {option}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
-                                                                                <label className="mt-2 mx-2">-</label>
-                                                                                <select
-                                                                                    className="form-control mb-3 weekly-hour-textbox d-inline-block w-50"
-                                                                                    value={timeSlot.end}
-                                                                                    onChange={(e) =>
-                                                                                        handleTimeSlotChange(
-                                                                                            day,
-                                                                                            timeSlot.id,
-                                                                                            "end",
-                                                                                            e.target.value
-                                                                                        )
-                                                                                    }
-                                                                                >
-                                                                                    {timeOptions.map((option, i) => (
-                                                                                        <option key={i} value={option}>
-                                                                                            {option}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </select>
-                                                                                <span
-                                                                                    className="mdi mdi-close mt-2 mx-2"
-                                                                                    onClick={() =>
-                                                                                        handleRemoveTimeSlot(
-                                                                                            day,
-                                                                                            timeSlot.id
-                                                                                        )
-                                                                                    }
-                                                                                ></span>
-                                                                            </div>
-                                                                        )}
-                                                                        <div>
-                                                                            {timeSlot.hasSameTimeError && (
-                                                                                <label className="error-label text-danger">
-                                                                                    Start and End time cannot be the
-                                                                                    same
-                                                                                </label>
-                                                                            )}
-                                                                            {timeSlot.hasLessThanStartTimeError && (
-                                                                                <label className="error-label text-danger">
-                                                                                    End time cannot be less than Start
-                                                                                    time
-                                                                                </label>
-                                                                            )}
-                                                                            {timeSlot.hasOverlapError && (
-                                                                                <label className="error-label text-danger">
-                                                                                    Times overlap with another set of
-                                                                                    times.
-                                                                                </label>
-                                                                            )}
+                                                            {textboxCounts[day].timeSlots.map((timeSlot) => (
+                                                                <React.Fragment key={timeSlot.id}>
+                                                                    {timeSlot.hidden ? null : (
+                                                                        <div className="d-flex">
+                                                                            <select
+                                                                                className="form-control mb-3 weekly-hour-textbox d-inline-block w-50"
+                                                                                value={timeSlot.start}
+                                                                                onChange={(e) =>
+                                                                                    handleTimeSlotChange(
+                                                                                        day,
+                                                                                        timeSlot.id,
+                                                                                        "start",
+                                                                                        e.target.value
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                {timeOptions.map((option, i) => (
+                                                                                    <option key={i} value={option}>
+                                                                                        {option}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </select>
+                                                                            <label className="mt-2 mx-2">-</label>
+                                                                            <select
+                                                                                className="form-control mb-3 weekly-hour-textbox d-inline-block w-50"
+                                                                                value={timeSlot.end}
+                                                                                onChange={(e) =>
+                                                                                    handleTimeSlotChange(
+                                                                                        day,
+                                                                                        timeSlot.id,
+                                                                                        "end",
+                                                                                        e.target.value
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                {timeOptions.map((option, i) => (
+                                                                                    <option key={i} value={option}>
+                                                                                        {option}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </select>
+                                                                            <span
+                                                                                className="mdi mdi-close mt-2 mx-2"
+                                                                                onClick={() =>
+                                                                                    handleRemoveTimeSlot(day, timeSlot.id)
+                                                                                }
+                                                                            ></span>
                                                                         </div>
-                                                                    </React.Fragment>
-                                                                )
-                                                            )}
+                                                                    )}
+                                                                    <div>
+                                                                        {timeSlot.hasSameTimeError && (
+                                                                            <label className="error-label text-danger">
+                                                                                Start and End time cannot be the same
+                                                                            </label>
+                                                                        )}
+                                                                        {timeSlot.hasLessThanStartTimeError && (
+                                                                            <label className="error-label text-danger">
+                                                                                End time cannot be less than Start time
+                                                                            </label>
+                                                                        )}
+                                                                        {timeSlot.hasOverlapError && (
+                                                                            <label className="error-label text-danger">
+                                                                                Times overlap with another set of times.
+                                                                            </label>
+                                                                        )}
+                                                                    </div>
+                                                                </React.Fragment>
+                                                            ))}
                                                         </div>
                                                         <div>
                                                             <span

@@ -23,6 +23,7 @@ const Meeting = () => {
   const meetingDetails = location.state;
   const navigate = useNavigate();
   const meetingId = new URLSearchParams(location.search).get("id");
+  const meetingIdformate = meetingId.split('/')[0];
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -193,7 +194,7 @@ const Meeting = () => {
         start: startslot,
         end: endslot,
       };
-
+      console.log(meetingIdformate)
       const response = await fetch("http://localhost:8000/slotbooked", {
         method: "POST",
         headers: {
@@ -201,8 +202,7 @@ const Meeting = () => {
           Authorization: `${userToken}`,
         },
         body: JSON.stringify({
-          userId,
-          meetingId,
+          meetingSettingsId: meetingIdformate,
           guestname: userName,
           guestemail: userEmail,
           slotbooked: slotBooked,

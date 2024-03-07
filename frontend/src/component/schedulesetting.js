@@ -286,10 +286,54 @@ const Schedulesetting = () => {
     return true;
   };
 
-  const handleViewLivePage = () => {
+  // const handleViewLivePage = () => {
+  //   const selectedMonth = selectedDate.getMonth() + 1;
+  //   const selectedYear = selectedDate.getFullYear();
+
+  //   const url = `/viewlivepage?id=${meetingId}&month=${selectedMonth}-${selectedYear}`;
+  //   const state = {
+  //     meetingDetails,
+  //     selectedDate,
+  //     timezoneArray,
+  //     selectedSchedule,
+  //     weeklyhoursArray,
+  //   };
+  //   navigate(url, { state });
+  // };
+
+  const handleViewLivePage = async () => {
+    // Call the function to update meeting settings
+    try {
+      const urlParams = new URLSearchParams(location.search);
+      const scheduleid = urlParams.get('SId');
+      const token = sessionStorage.getItem('userToken');
+      const response = await fetch(`http://localhost:8000/meetingSettings/${meetingId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+        body: JSON.stringify({
+          scheduleId: scheduleid, // Assuming selectedSchedule holds the ID of the selected schedule
+          // Other fields to update if needed
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update meeting settings');
+      }
+
+      console.log(selectedSchedule)
+      const data = await response.json();
+      console.log('Meeting settings updated successfully:', data);
+      // Optionally, you can perform additional actions after successful update
+    } catch (error) {
+      console.error('Error updating meeting settings:', error);
+      // Handle error as needed
+    }
+
+    // Navigate to the live page
     const selectedMonth = selectedDate.getMonth() + 1;
     const selectedYear = selectedDate.getFullYear();
-
     const url = `/viewlivepage?id=${meetingId}&month=${selectedMonth}-${selectedYear}`;
     const state = {
       meetingDetails,
