@@ -102,21 +102,56 @@ const getAllSchedules = (req, res) => {
 };
 
 // All userSchedule 
+// const userSchedules = (req, res) => {
+//   const userId = req.params.id;
+//   try {
+//     const selectQuery = `SELECT userId, id , name, isDefault, timezone, weeklyhours FROM schedules where userId = ? AND deletedAt IS NULL`;
+
+//     db.query(selectQuery, [userId], (error, results) => {
+//       if (error) {
+//         console.log(error, 'Internal Server Error inside query');
+//       } else {
+//         const schedules = results.map(schedule => schedule);
+//         res.status(200).json(schedules);
+//       }
+//     });
+//   } catch (err) {
+//     console.error('Error in getAllSchedules:', err);
+//   }
+// };
+
 const userSchedules = (req, res) => {
   const userId = req.params.id;
   try {
-    const selectQuery = `SELECT userId, id , name, isDefault, timezone, weeklyhours FROM schedules where userId = ? AND deletedAt IS NULL`;
+    const selectQuery = `SELECT s.userId, s.id, s.name, s.isDefault, s.timezone, s.weeklyhours, m.id AS meetingId, m.guestname, m.guestemail, m.slotbooked 
+                         FROM schedules AS s 
+                         LEFT JOIN meeting AS m ON s.id = m.meetingSettingsId 
+                         WHERE s.userId = ? AND s.deletedAt IS NULL AND m.deletedAt IS NULL`;
 
     db.query(selectQuery, [userId], (error, results) => {
       if (error) {
         console.log(error, 'Internal Server Error inside query');
+        return res.status(500).json({ error });
       } else {
-        const schedules = results.map(schedule => schedule);
+        const schedules = results.map(schedule => ({
+          id: schedule.id,
+          name: schedule.name,
+          isDefault: schedule.isDefault,
+          timezone: schedule.timezone,
+          weeklyhours: schedule.weeklyhours,
+          meeting: {
+            id: schedule.meetingId,
+            guestname: schedule.guestname,
+            guestemail: schedule.guestemail,
+            slotbooked: schedule.slotbooked
+          }
+        }));
         res.status(200).json(schedules);
       }
     });
   } catch (err) {
     console.error('Error in getAllSchedules:', err);
+    return res.status(500).json({ error: err.message || "Internal server error" });
   }
 };
 

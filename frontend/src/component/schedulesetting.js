@@ -48,6 +48,8 @@ const Schedulesetting = () => {
     return currentTime;
   }
 
+
+
   const dropdownStyles = {
     control: (styles) => ({ ...styles, marginBottom: 20 }),
     menu: (styles) => ({ ...styles, marginTop: -8 }),
@@ -57,6 +59,8 @@ const Schedulesetting = () => {
     settimezoneArray(selectedOption.value);
   };
 
+
+  
   useEffect(() => {
     const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const timezoneFromList = Timezones_List.find(
@@ -314,8 +318,7 @@ const Schedulesetting = () => {
           'Authorization': token,
         },
         body: JSON.stringify({
-          scheduleId: scheduleid, // Assuming selectedSchedule holds the ID of the selected schedule
-          // Other fields to update if needed
+          scheduleId: scheduleid,
         }),
       });
       if (!response.ok) {

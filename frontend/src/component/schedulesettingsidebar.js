@@ -1610,6 +1610,7 @@ const Schedulesettingsidebar = ({ onScheduleChange, scheduleId, weeklyhours }) =
             console.warn('Invalid data format or empty array');
           }
           setSchedules(data);
+          console.log(data);
         })
         .catch(error => {
           console.error('Error fetching schedules:', error);
