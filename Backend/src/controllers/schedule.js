@@ -123,10 +123,27 @@ const getAllSchedules = (req, res) => {
 const userSchedules = (req, res) => {
   const userId = req.params.id;
   try {
-    const selectQuery = `SELECT s.userId, s.id, s.name, s.isDefault, s.timezone, s.weeklyhours, m.id AS meetingId, m.guestname, m.guestemail, m.slotbooked 
-                         FROM schedules AS s 
-                         LEFT JOIN meeting AS m ON s.id = m.meetingSettingsId 
-                         WHERE s.userId = ? AND s.deletedAt IS NULL AND m.deletedAt IS NULL`;
+    const selectQuery = `
+      SELECT 
+        u.id AS userId, 
+        s.id AS scheduleId, 
+        ms.id AS meetingSettingId,
+        m.id AS meetingId,
+        s.name AS scheduleName,
+        ms.name AS meetingSettingName,
+        m.guestname,
+        m.guestemail,
+        m.slotbooked 
+      FROM 
+        users AS u
+        LEFT JOIN schedules AS s ON u.id = s.userId
+        LEFT JOIN meeting_settings AS ms ON s.id = ms.scheduleId
+        LEFT JOIN meeting AS m ON ms.id = m.meetingSettingsId
+      WHERE 
+        u.id = ? 
+        AND s.deletedAt IS NULL 
+        AND ms.deletedAt IS NULL 
+        AND m.deletedAt IS NULL`;
 
     db.query(selectQuery, [userId], (error, results) => {
       if (error) {
@@ -134,26 +151,25 @@ const userSchedules = (req, res) => {
         return res.status(500).json({ error });
       } else {
         const schedules = results.map(schedule => ({
-          id: schedule.id,
-          name: schedule.name,
-          isDefault: schedule.isDefault,
-          timezone: schedule.timezone,
-          weeklyhours: schedule.weeklyhours,
-          meeting: {
-            id: schedule.meetingId,
-            guestname: schedule.guestname,
-            guestemail: schedule.guestemail,
-            slotbooked: schedule.slotbooked
-          }
+          userId: schedule.userId,
+          scheduleId: schedule.scheduleId,
+          meetingSettingId: schedule.meetingSettingId,
+          meetingId: schedule.meetingId,
+          scheduleName: schedule.scheduleName,
+          meetingSettingName: schedule.meetingSettingName,
+          guestname: schedule.guestname,
+          guestemail: schedule.guestemail,
+          slotbooked: schedule.slotbooked
         }));
         res.status(200).json(schedules);
       }
     });
   } catch (err) {
-    console.error('Error in getAllSchedules:', err);
+    console.error('Error in userSchedules:', err);
     return res.status(500).json({ error: err.message || "Internal server error" });
   }
 };
+
 
 
 // Update Schedule By ID
