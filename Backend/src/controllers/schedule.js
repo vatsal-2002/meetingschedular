@@ -102,74 +102,147 @@ const getAllSchedules = (req, res) => {
 };
 
 // All userSchedule 
-// const userSchedules = (req, res) => {
-//   const userId = req.params.id;
-//   try {
-//     const selectQuery = `SELECT userId, id , name, isDefault, timezone, weeklyhours FROM schedules where userId = ? AND deletedAt IS NULL`;
-
-//     db.query(selectQuery, [userId], (error, results) => {
-//       if (error) {
-//         console.log(error, 'Internal Server Error inside query');
-//       } else {
-//         const schedules = results.map(schedule => schedule);
-//         res.status(200).json(schedules);
-//       }
-//     });
-//   } catch (err) {
-//     console.error('Error in getAllSchedules:', err);
-//   }
-// };
-
 const userSchedules = (req, res) => {
   const userId = req.params.id;
   try {
-    const selectQuery = `
-      SELECT 
-        u.id AS userId, 
-        s.id AS scheduleId, 
-        ms.id AS meetingSettingId,
-        m.id AS meetingId,
-        s.name AS scheduleName,
-        ms.name AS meetingSettingName,
-        m.guestname,
-        m.guestemail,
-        m.slotbooked 
-      FROM 
-        users AS u
-        LEFT JOIN schedules AS s ON u.id = s.userId
-        LEFT JOIN meeting_settings AS ms ON s.id = ms.scheduleId
-        LEFT JOIN meeting AS m ON ms.id = m.meetingSettingsId
-      WHERE 
-        u.id = ? 
-        AND s.deletedAt IS NULL 
-        AND ms.deletedAt IS NULL 
-        AND m.deletedAt IS NULL`;
+    const selectQuery = `SELECT userId, id , name, isDefault, timezone, weeklyhours FROM schedules where userId = ? AND deletedAt IS NULL`;
 
     db.query(selectQuery, [userId], (error, results) => {
       if (error) {
         console.log(error, 'Internal Server Error inside query');
-        return res.status(500).json({ error });
       } else {
-        const schedules = results.map(schedule => ({
-          userId: schedule.userId,
-          scheduleId: schedule.scheduleId,
-          meetingSettingId: schedule.meetingSettingId,
-          meetingId: schedule.meetingId,
-          scheduleName: schedule.scheduleName,
-          meetingSettingName: schedule.meetingSettingName,
-          guestname: schedule.guestname,
-          guestemail: schedule.guestemail,
-          slotbooked: schedule.slotbooked
-        }));
+        const schedules = results.map(schedule => schedule);
         res.status(200).json(schedules);
       }
     });
   } catch (err) {
-    console.error('Error in userSchedules:', err);
-    return res.status(500).json({ error: err.message || "Internal server error" });
+    console.error('Error in getAllSchedules:', err);
   }
 };
 
+
+// function removeBookedSlots(weeklyArray, slotbooked) {
+//   if (!slotbooked) {
+//     return weeklyArray;
+//   }
+
+//   // Extract the time part after space in the start and end properties of slotbooked
+//   const bookedStartTime = slotbooked.start.split(' ')[1];
+//   const bookedEndTime = slotbooked.end.split(' ')[1];
+
+//   console.log('Slot booked start time:', bookedStartTime);
+//   console.log('Slot booked end time:', bookedEndTime);
+
+//   // Get the day of the week (0-6) from the slotbooked start date
+//   const bookedDay = new Date(slotbooked.start).getDay();
+
+//   // Deep clone weeklyArray to avoid mutating the original array
+//   const filteredWeeklyArray = JSON.parse(JSON.stringify(weeklyArray));
+
+//   // Filter out the slot range specified in slotbooked for the corresponding day
+//   for (let day of filteredWeeklyArray) {
+//     if (day.day === bookedDay) {
+//       if (!day.slots || day.slots.length === 0) {
+//         continue; // Skip schedules with no slots
+//       }
+
+//       const slots = day.slots;
+
+//       const newSlots = [];
+
+//       for (let slot of slots) {
+//         const slotStartHour = parseInt(slot.start.hour);
+//         const slotEndHour = parseInt(slot.end.hour);
+
+//         if (slotEndHour <= parseInt(bookedStartTime) || slotStartHour >= parseInt(bookedEndTime)) {
+//           // Add the slot to newSlots if it falls outside the booked time range
+//           newSlots.push(slot);
+//         } else {
+//           // Adjust the slot timing to remove the booked time range
+//           if (slotStartHour < parseInt(bookedStartTime)) {
+//             // Add the first part of the slot
+//             newSlots.push({
+//               end: {
+//                 hour: bookedStartTime,
+//                 minute: slot.start.minute
+//               },
+//               start: slot.start,
+//             });
+//           }
+//           if (slotEndHour > parseInt(bookedEndTime)) {
+//             // Add the second part of the slot
+//             newSlots.push({
+//               end: slot.end,
+//               start: {
+//                 hour: bookedEndTime,
+//                 minute: slot.end.minute
+//               },
+//             });
+//           }
+//         }
+//       }
+
+//       // Update the slots for the current day
+//       day.slots = newSlots;
+//       break; // Break the loop after processing the matching day
+//     }
+//   }
+
+//   return filteredWeeklyArray;
+// }
+
+
+// const userSchedules = (req, res) => {
+//   const userId = req.params.id;
+//   try {
+//     const selectQuery = `
+//           SELECT 
+//               u.id AS userId, 
+//               s.id AS scheduleId, 
+//               ms.id AS meetingSettingId,
+//               m.id AS meetingId,
+//               s.name AS scheduleName,
+//               ms.name AS meetingSettingName,
+//               m.guestname,
+//               m.guestemail,
+//               s.weeklyhours,
+//               m.slotbooked
+//           FROM 
+//               users AS u
+//               LEFT JOIN schedules AS s ON u.id = s.userId
+//               LEFT JOIN meeting_settings AS ms ON s.id = ms.scheduleId
+//               LEFT JOIN meeting AS m ON ms.id = m.meetingSettingsId
+//           WHERE 
+//               u.id = ? 
+//               AND s.deletedAt IS NULL 
+//               AND ms.deletedAt IS NULL 
+//               AND m.deletedAt IS NULL`;
+
+//     db.query(selectQuery, [userId], (error, results) => {
+//       if (error) {
+//         console.log(error, 'Internal Server Error inside query');
+//         return res.status(500).json({ error });
+//       } else {
+//         const schedules = results.map(schedule => ({
+//           userId: schedule.userId,
+//           scheduleId: schedule.scheduleId,
+//           meetingSettingId: schedule.meetingSettingId,
+//           meetingId: schedule.meetingId,
+//           scheduleName: schedule.scheduleName,
+//           meetingSettingName: schedule.meetingSettingName,
+//           guestname: schedule.guestname,
+//           guestemail: schedule.guestemail,
+//           weeklyhours: removeBookedSlots(schedule.weeklyhours, schedule.slotbooked),
+//           slotbooked: schedule.slotbooked
+//         }));
+//         res.status(200).json(schedules);
+//       }
+//     });
+//   } catch (err) {
+//     console.error('Error in userSchedules:', err);
+//     return res.status(500).json({ error: err.message || "Internal server error" });
+//   }
+// };
 
 
 // Update Schedule By ID
