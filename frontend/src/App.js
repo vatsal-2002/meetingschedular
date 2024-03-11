@@ -8,7 +8,6 @@ import Login from './component/login';
 import Signup from './component/signup';
 import Setting from './component/setting';
 import Availability from './component/availability';
-import Demo from './component/demo';
 import Index from './component/event';
 import Createmeeting from './component/createmeeting';
 import Meetingsetting from './component/meetingsetting';

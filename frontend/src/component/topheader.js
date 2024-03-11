@@ -54,10 +54,11 @@ const Topheader = ({ isToggled, handleToggle }) => {
           </div>
 
           <div className="page-profile">
-            <a href="" className="btn btn-primary" onClick={handleLogout}>
+            <a href="#" className="btn btn-primary" onClick={handleLogout} title="Logout">
               <span className="mdi mdi-power" />
             </a>
           </div>
+
         </div>
       </div>
     </>
